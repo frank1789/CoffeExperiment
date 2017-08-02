@@ -1,0 +1,182 @@
+\documentclass[11pt,a4paper,english]{article}
+\title{Sweave Example 1}
+\pagenumbering{arabic}
+\usepackage{setspace}
+%\onehalfspace
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage[section]{placeins}
+%--Text and Style------------------------------------------------------------------------
+\usepackage{microtype} 			% Slightly tweak font spacing for aesthetics
+\usepackage[english]{babel} 		% Language hyphenation and typographical rules
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{ae}
+\usepackage{relsize}
+\usepackage{csquotes}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathdots}
+\usepackage{mathtools}
+\usepackage[colorlinks=true]{hyperref}
+\hypersetup{
+	bookmarksnumbered=true,
+	linkcolor=black,
+	citecolor=black,
+	%pagecolor=black,
+	urlcolor=black,
+}
+\usepackage{verbatim}
+\usepackage{alltt}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\RealNumber}{\rm I\!R}
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norma}{\lVert}{\rVert}
+
+%---Figure------------------------------------------------------------------------------
+
+\usepackage{graphicx}
+\graphicspath{{./imgs/}}
+\renewcommand{\figurename}{Fig.}
+\usepackage{subfig}
+
+%---------------------------------------------------------------------------------------
+\usepackage{algorithmicx}
+\usepackage[ruled]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+%---Table------------------------------------------------------------
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{color}
+\usepackage{adjustbox}
+\usepackage{colortbl}
+\usepackage{pgfplotstable}
+\usepackage{makecell}
+\usepackage{booktabs}
+
+%--------------------------------------------------------------------
+% Allows abstract customization
+\usepackage{abstract}
+
+% Set the "Abstract" text to bold
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} 
+% Set the abstract itself to small italic text
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} 
+
+% Allows customization of titles
+\usepackage{titlesec} 
+
+% Roman numerals for the sections
+\renewcommand\thesection{\Roman{section}} 
+
+% roman numerals for subsections
+\renewcommand\thesubsection{\roman{subsection}} 
+
+% Change the look of the section titles
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} 
+
+% Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} 
+\usepackage{titling} % Customizing the title section
+
+%----------------------------------------------------------------------------------------
+\usepackage{tikz,fp,ifthen,fullpage}
+\usepackage{pgfmath, pgfplots, xparse}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{backgrounds, arrows}
+\usetikzlibrary{decorations.pathmorphing,fit,through}
+\usetikzlibrary{shapes,decorations,shadows}
+\usetikzlibrary{fadings,patterns,mindmap}
+\usepackage{tikz-dimline, calc}
+\pgfplotsset{compat=newest}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+
+\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
+
+
+\posttitle{\end{center}} % Article title closing formatting
+
+
+\title{Homework - Kinematics Calibration of a Differential drive wheelchair} % Article title
+
+\author{%
+	% Your name
+	\textsc{Francesco Argentieri}\thanks{ID: 183892}\\[1ex] 
+	% Your institution
+	\normalsize University of Trento \\ 
+	% Your email address
+	\normalsize \href{mailto:francesco.argentieri@studenti.unitn.it}{francesco.argentieri@studenti.unitn.it} 
+}
+%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
+%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
+%\normalsize University of Utah \\ % Second author's institution
+%\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
+
+% Leave empty to omit a date
+\date{} 
+\renewcommand{\maketitlehookd}{%
+	\begin{abstract}
+		\noindent  For a mobile robot, odometry calibration consists of the identification of a set of kinematic parameters that allow reconstructing the vehicle’s relative position and orientation starting from the wheels’ encoder measurements.
+The aim of the homework is to:
+estimate from the encoder and the camera data the kinematics parameters wheels radius “$r_\textsc{l}$" and “$r_\textsc{r}$" and wheelbase “b".
+Estimate the camera position with respect to the wheelchair reference point (the mid point between the wheels).
+\end{abstract}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+%\author{Friedrich Leisch}
+\usepackage{Sweave}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+In this example we embed parts of the examples from the \texttt{kruskal.test} help page into a \LaTeX{} document:
+\begin{Schunk} \begin{Sinput}
+> data(airquality , package="datasets")
+> library (" stats ")
+> kruskal.test(Ozone ~ Month, data = airquality) \end{Sinput}
+\begin{Soutput}
+Kruskal -Wallis rank sum test
+data: Ozone by Month
+Kruskal-Wallis chi-squared = 29.267, df = 4, p-value = 6.901e-06 \end{Soutput}
+\end{Schunk}
+which shows that the location parameter of the Ozone
+distribution varies significantly from month to month. Finally we include a boxplot of the data:
+%\begin{center} \includegraphics{example -1-002} \end{center}
+First we define a figure hook:
+<<results=hide>>=
+options(SweaveHooks = list(fig = function() par(mfrow=c(2,2))))
+@
+Then we setup variable definitions without actually evaluating them
+<<xydef,eval=false>>=
+x <- 1:10
+y <- rnorm(x)
+@
+Then we put the pieces together:
+\begin{center}
+<<fig=T>>=
+<<xydef>>
+lm1 <- lm(y~x)
+summary(lm1)
+plot(lm1)
+@
+\end{center}
+\end{document}
