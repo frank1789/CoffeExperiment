@@ -44,66 +44,41 @@ setwd('/Users/francescoargentieri/ProjectR')
 #                       |
 #                       +----------> tempo (s)
 
-# function to generate the design matrix, with the measured time
-prepare <-
-  function(factors = list(
-    fact1 = c(1:2),
-    fact2 = c(1:2),
-    fact3 = c(1:2),
-    fact4 = c(1:2)
-  ),
-  namefile = "",
-  runorder = TRUE) {
-    df.g <- expand.grid(factors)
-    df.g
-    n    = nrow(df.g)
-    key  = data.frame(r = runif(n, 0, 1), s = 1:n)
-    key  = key[order(key$r), ]$s
-    df.h = data.frame(RunOrder  = key,
-                      StdOrder  = 1:n)
-    df.t = data.frame(Yield = rep(NA, n))
-    df = cbind(df.h, df.g, df.t)
-    if (runorder) {
-      df = df[order(df$RunOrder), ]
-    }
-    
-    # input name file
-    if (namefile != "") {
-      write.table(
-        df,
-        namefile,
-        col.names = T,
-        row.names = F,
-        quote = F,
-        sep = "\t"
-      )
-    }
-    return(df)
-  }
+# define level
+lvl = c(-1, +1)
+# define five factor
+factors = list(
+  WaterLvl = c(12,36),
+  WaterType = c("A","B"),
+  CoffeLoad = c(6.5,8.5),
+  Pressing = lvl,
+  Heat = c("l", "h")
+)
 
 # generate design matrix
-df <- prepare(
-  factors = list(
-    WaterLvl = c(-1, +1),
-    WaterType = c(-1, +1),
-    CoffeLoad = c(-1, +1),
-    Heat = c(-1, +1)
-  ),
-  runorder = F,
-  "prova.txt"
-)
+df <- prepare(factors, runorder = F, "DesignMatrix.txt")
 
 # preview of design matrix
 print(df)
 
-# write result in colunm
-result <- c(1:16)
-print(result)
-df$Yield <- result
+# perform the experiment and store result in vector
+result <- runif(32, 1.5, 100.5)
+data <- df$Yield
+(df <- data.frame(df, Yield = result))
 
 # print preview 
 df
-
+#attach(df)
+df.lm <- lm(Yield ~  as.factor(WaterLvl) * WaterType * as.factor(CoffeLoad) * Pressing *Heat, data = df)
+anova(df.lm)
+hist(df.lm$res, xlab = "Residuals", main = "Histogram of Residuals")
+qqnorm(df.lm$residuals, ylab = "Residuals", datax = T)
+qqline(df.lm$residuals, col = "red", datax = T )
+plot(df.lm$fitted.values, df.lm$residuals , ylab = "Residuals" , xlab = "Fitted",
+     main = "Fitted values pattern")
+plot(df$RunOrder, df.lm$residuals, ylab = "Residuals", main = "RunOrder pattern")
+plot(df$RunOrder, df.lm$residuals, ylab = "Resiudals", main = "Run")
+detach(df)
 ###############################################################################################
 
   #   a <- nrow(factors)
@@ -172,3 +147,11 @@ anova(df2.lm)
 df2
 write.table(df2, "testtab.txt", col.names = T, quote = F, row.names = F, sep = "\t", qmethod = c("escape", "double"))
 df2
+
+
+if(!require(AlgDesign)){
+  +     install.packages("AlgDesign")
+  +     library(AlgDesign)
+}
+
+gen.factorial(c(2,2,2,2,2),5, varNames = c("fact1", "fact2", "fact3", "fact4", "fact5"))
