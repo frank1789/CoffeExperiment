@@ -49,35 +49,46 @@ lvl = c(-1, +1)
 # define five factor
 factors = list(
   WaterLvl = c(12,36),
-  WaterType = c("A","B"),
+  WaterType = c("Levissima","San Benedetto"),
   CoffeLoad = c(6.5,8.5),
-  Pressing = lvl,
-  Heat = c("l", "h")
+  Pressing = c("No", "Yes"),
+  Heat = c("Low", "High")
 )
 
 # generate design matrix
 df <- prepare(factors, runorder = F, "DesignMatrix.txt")
 
 # preview of design matrix
+sink("NoResult.txt")
 print(df)
+sink()
 
 # perform the experiment and store result in vector
 result <- runif(32, 1.5, 100.5)
-data <- df$Yield
-(df <- data.frame(df, Yield = result))
-
+#data <- df$Yield
+df$Yield <- result
 # print preview 
 df
 #attach(df)
 df.lm <- lm(Yield ~  as.factor(WaterLvl) * WaterType * as.factor(CoffeLoad) * Pressing *Heat, data = df)
 anova(df.lm)
 hist(df.lm$res, xlab = "Residuals", main = "Histogram of Residuals")
-qqnorm(df.lm$residuals, ylab = "Residuals", datax = T)
-qqline(df.lm$residuals, col = "red", datax = T )
+qqnorm(df.lm$residuals, ylab = "Residuals")
+qqline(df.lm$residuals, col = "red" )
 plot(df.lm$fitted.values, df.lm$residuals , ylab = "Residuals" , xlab = "Fitted",
      main = "Fitted values pattern")
 plot(df$RunOrder, df.lm$residuals, ylab = "Residuals", main = "RunOrder pattern")
 plot(df$RunOrder, df.lm$residuals, ylab = "Resiudals", main = "Run")
+
+
+#hist(df.lm$effects, xlab = "Residuals", main = "Histogram of Residuals")
+qn <- qqnorm(df.lm$effects, ylab = "Residuals")
+text(qn$x, qn$y, labels = names(df.lm$eff)[2:18], pos = 4)
+qqline(df.lm$effects, col = "red")
+#plot(df.lm$fitted.values, df.lm$effects , ylab = "Residuals" , xlab = "Fitted",
+#     main = "Fitted values pattern")
+#plot(df$RunOrder, df.lm$effects, ylab = "Residuals", main = "RunOrder pattern")
+#plot(df$RunOrder, df.lm$effects, ylab = "Resiudals", main = "Run")
 detach(df)
 ###############################################################################################
 
