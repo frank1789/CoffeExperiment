@@ -63,24 +63,24 @@
 \usepackage{abstract}
 
 % Set the "Abstract" text to bold
-\renewcommand{\abstractnamefont}{\normalfont\bfseries} 
+\renewcommand{\abstractnamefont}{\normalfont\bfseries}
 % Set the abstract itself to small italic text
-\renewcommand{\abstracttextfont}{\normalfont\small\itshape} 
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape}
 
 % Allows customization of titles
-\usepackage{titlesec} 
+\usepackage{titlesec}
 
 % Roman numerals for the sections
-\renewcommand\thesection{\Roman{section}} 
+\renewcommand\thesection{\Roman{section}}
 
 % roman numerals for subsections
-\renewcommand\thesubsection{\roman{subsection}} 
+\renewcommand\thesubsection{\roman{subsection}}
 
 % Change the look of the section titles
-\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} 
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{}
 
 % Change the look of the section titles
-\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} 
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{}
 \usepackage{titling} % Customizing the title section
 
 %----------------------------------------------------------------------------------------
@@ -110,11 +110,11 @@
 
 \author{%
 	% Your name
-	\textsc{Francesco Argentieri}\thanks{ID: 183892}\\[1ex] 
+	\textsc{Francesco Argentieri}\thanks{ID: 183892}\\[1ex]
 	% Your institution
-	\normalsize University of Trento \\ 
+	\normalsize University of Trento \\
 	% Your email address
-	\normalsize \href{mailto:francesco.argentieri@studenti.unitn.it}{francesco.argentieri@studenti.unitn.it} 
+	\normalsize \href{mailto:francesco.argentieri@studenti.unitn.it}{francesco.argentieri@studenti.unitn.it}
 }
 %\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
 %\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
@@ -122,7 +122,7 @@
 %\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
 
 % Leave empty to omit a date
-\date{} 
+\date{}
 \renewcommand{\maketitlehookd}{%
 	\begin{abstract}
 		\noindent  For a mobile robot, odometry calibration consists of the identification of a set of kinematic parameters that allow reconstructing the vehicle’s relative position and orientation starting from the wheels’ encoder measurements.
