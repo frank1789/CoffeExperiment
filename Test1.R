@@ -3,6 +3,7 @@ rm(list = ls())
 close.screen(all = TRUE)
 
 # Load library
+source("PrepareFunction.R")
 
 #library(gdata)
 
@@ -43,42 +44,67 @@ setwd('/Users/francescoargentieri/ProjectR')
 #                       |
 #                       +----------> tempo (s)
 
-
-
 # function to generate the design matrix, with the measured time
-prepare <- function(
-  factors = list(fact1 = c(1:3), fact2 = c(1:3), fact3 = c(1:3), fact4 =c(1:2), fact5=c(1:1)),
-  namefile = "", runorder = TRUE) {
-  df.g <-expand.grid(factors)
-  n    = nrow(df.g)
-  key  = data.frame(r=runif(n, 0, 1), s=1:n)
-  key  = key[order(key$r),]$s
-  df.h = data.frame(
-    RunOrder  = key,
-    StdOrder  = 1:n
-  )
-  df.t = data.frame(Yield=rep(NA, n))
-  df = cbind(df.h, df.g, df.t)
-  if (runorder) {
-    df = df[order(df$RunOrder),]
+prepare <-
+  function(factors = list(
+    fact1 = c(1:2),
+    fact2 = c(1:2),
+    fact3 = c(1:2),
+    fact4 = c(1:2)
+  ),
+  namefile = "",
+  runorder = TRUE) {
+    df.g <- expand.grid(factors)
+    df.g
+    n    = nrow(df.g)
+    key  = data.frame(r = runif(n, 0, 1), s = 1:n)
+    key  = key[order(key$r), ]$s
+    df.h = data.frame(RunOrder  = key,
+                      StdOrder  = 1:n)
+    df.t = data.frame(Yield = rep(NA, n))
+    df = cbind(df.h, df.g, df.t)
+    if (runorder) {
+      df = df[order(df$RunOrder), ]
+    }
+    
+    # input name file
+    if (namefile != "") {
+      write.table(
+        df,
+        namefile,
+        col.names = T,
+        row.names = F,
+        quote = F,
+        sep = "\t"
+      )
+    }
+    return(df)
   }
-  
-  # input name file
-  if (namefile != "") {
-    write.table(df, namefile, col.names = T, row.names = F, quote = F, sep = "\t")
-  }
-  return(df)
-}
 
+# generate design matrix
 df <- prepare(
-  factors=list(WaterLvl=c(15, 20, 25), 
-               WaterType=c(125, 150, 175), 
-               CoffeLoad=c(3,5,10), 
-               Heat = c("-","+"),
-               Unknow = 1),
-               runorder = F, "prova.txt")
+  factors = list(
+    WaterLvl = c(-1, +1),
+    WaterType = c(-1, +1),
+    CoffeLoad = c(-1, +1),
+    Heat = c(-1, +1)
+  ),
+  runorder = F,
+  "prova.txt"
+)
+
+# preview of design matrix
+print(df)
+
+# write result in colunm
+result <- c(1:16)
+print(result)
+df$Yield <- result
+
+# print preview 
 df
 
+###############################################################################################
 
   #   a <- nrow(factors)
   #   b <- nrow(factors)
@@ -114,16 +140,16 @@ detach(df)
 df2 <- read.table("testcatapult.dat", h = T,stringsAsFactors = default.stringsAsFactors())
 df2
 
-
-df2.lm <- lm(df2)
+df2 <- df
+df2.lm <- lm(df)
 # 4 figures arranged in 2 rows and 2 columns
 #par(mar= c(5,4,0,2) +0.1)
 split.screen(c(2,2))
 screen(1)
-boxplot(df2$distance, horizontal = T)
+boxplot(df2$Heat, horizontal = T)
 screen(2)
-qqnorm(df2$distance, ylab = "residuals")
-qqline(df2$distance, col = "dodgerblue" )
+qqnorm(df2$Yield, ylab = "residuals")
+qqline(df2$Yield, col = "dodgerblue" )
 screen(3)
 hist(df2$distance)
 screen(4)
