@@ -2,14 +2,12 @@
 rm(list = ls())
 close.screen(all = TRUE)
 
-# Load library
-source("PrepareFunction.R")
-
-#library(gdata)
-
 #get and set working directory
 getwd()
 setwd('/Users/francescoargentieri/ProjectR')
+
+# Load library
+source("PrepareFunction.R")
 
 #definisco il mio esperimento, vorrei misurare la quantità e il tempo di risalita del caffè dalla caldaia
 #                                                    +----------> sotto la valvola (g)
@@ -56,7 +54,7 @@ factors = list(
 )
 
 # generate design matrix
-df <- prepare(factors, runorder = F, "DesignMatrix.txt")
+df <- prepare(factors, runorder = F, "DesignMatrix.dat")
 
 # preview of design matrix
 sink("NoResult.txt")
