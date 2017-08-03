@@ -1,0 +1,33 @@
+RunOrder	StdOrder	WaterLvl	WaterType	CoffeLoad	Pressing	Heat	Yield
+28	1	12	Levissima	6.5	No	Low	NA
+22	2	36	Levissima	6.5	No	Low	NA
+6	3	12	San Benedetto	6.5	No	Low	NA
+29	4	36	San Benedetto	6.5	No	Low	NA
+26	5	12	Levissima	8.5	No	Low	NA
+19	6	36	Levissima	8.5	No	Low	NA
+21	7	12	San Benedetto	8.5	No	Low	NA
+16	8	36	San Benedetto	8.5	No	Low	NA
+20	9	12	Levissima	6.5	Yes	Low	NA
+30	10	36	Levissima	6.5	Yes	Low	NA
+32	11	12	San Benedetto	6.5	Yes	Low	NA
+4	12	36	San Benedetto	6.5	Yes	Low	NA
+31	13	12	Levissima	8.5	Yes	Low	NA
+12	14	36	Levissima	8.5	Yes	Low	NA
+25	15	12	San Benedetto	8.5	Yes	Low	NA
+23	16	36	San Benedetto	8.5	Yes	Low	NA
+9	17	12	Levissima	6.5	No	High	NA
+15	18	36	Levissima	6.5	No	High	NA
+10	19	12	San Benedetto	6.5	No	High	NA
+7	20	36	San Benedetto	6.5	No	High	NA
+1	21	12	Levissima	8.5	No	High	NA
+11	22	36	Levissima	8.5	No	High	NA
+2	23	12	San Benedetto	8.5	No	High	NA
+17	24	36	San Benedetto	8.5	No	High	NA
+5	25	12	Levissima	6.5	Yes	High	NA
+18	26	36	Levissima	6.5	Yes	High	NA
+8	27	12	San Benedetto	6.5	Yes	High	NA
+27	28	36	San Benedetto	6.5	Yes	High	NA
+14	29	12	Levissima	8.5	Yes	High	NA
+3	30	36	Levissima	8.5	Yes	High	NA
+13	31	12	San Benedetto	8.5	Yes	High	NA
+24	32	36	San Benedetto	8.5	Yes	High	NA
