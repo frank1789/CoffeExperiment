@@ -8,74 +8,110 @@ setwd('/Users/francescoargentieri/ProjectR')
 
 # load library
 library(lubridate)
+library(MASS)
 
-df <- read.table("DesignMatrix-ResultWeight.dat", header = T)
+# read dataframe from file with result
+df <- read.table("DesignMatrix-ResultTime.dat", header = T)
 
-# define level
-lvl = c(-1, +1)
-
-# define five factor
-factors = list(
-  A = lvl,
-  B = lvl,
-  C = lvl,
-  D = lvl,
-  E = lvl
-)
-
-# generate design matrix
-df  <- expand.grid(
-  A = lvl,
-  B = lvl,
-  C = lvl,
-  D = lvl,
-  E = lvl
-)
-
-# result time of experiment
-times <-
-  c(
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    "12:54.96",
-    "16:30.25",
-    NA,
-    NA,
-    NA,
-    NA,
-    "8:48.47",
-    "14:07.13",
-    NA,
-    NA,
-    NA,
-    "6:23.46",
-    "5:38.47",
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    "6:02.69",
-    NA,
-    NA,
-    NA,
-    "9:38.08"
-  )
+# # define level
+# lvl = c(-1, +1)
+# 
+# # define five factor
+# factors = list(
+#   A = lvl,
+#   B = lvl,
+#   C = lvl,
+#   D = lvl,
+#   E = lvl
+# )
+# 
+# # generate design matrix
+# df  <- expand.grid(
+#   A = lvl,
+#   B = lvl,
+#   C = lvl,
+#   D = lvl,
+#   E = lvl
+# )
+# 
+# # result time of experiment
+# times <-
+#   c(
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     "12:54.96",
+#     "16:30.25",
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     "8:48.47",
+#     "14:07.13",
+#     NA,
+#     NA,
+#     NA,
+#     "6:23.46",
+#     "5:38.47",
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     NA,
+#     "6:02.69",
+#     NA,
+#     NA,
+#     NA,
+#     "9:38.08"
+#   )
 
 # convert string time [mm:ss] -> time in numeric second [s]
-for (i in times) {
-  YieldTime <- as.numeric(as.period(ms(times), unit = "sec"))
-}
+# for (i in times) {
+#   YieldTime <- as.numeric(as.period(ms(times), unit = "sec"))
+# }
 
-# complte the dataframe
-(df <- data.frame(df, Yield = YieldTime))
+
+# convert string time [mm:ss] -> time in numeric second [s]
+df$Yield <- as.numeric(as.period(ms(df$Yield), unit = "sec"))
+
+
+df$WaterType <-
+  factor(
+    df$WaterType,
+    levels = c('Levissima', 'SanBenedetto'),
+    labels = c('-', '+')
+  )
+df$Pressing <-
+  factor(df$Pressing,
+         levels = c('No', 'Yes'),
+         labels = c('-', '+'))
+df$Heat <- factor(df$Heat,
+                  levels = c('Low', 'High'),
+                  labels = c('-', '+'))
+
+# names(df)
+# length(df)
+# df <-df[3:(length(df))]
+# df
+names(df)[3] <- "A"
+names(df)[4] <- "B"
+names(df)[5] <- "C"
+names(df)[6] <- "D"
+names(df)[7] <- "E"
+
+df
+
+
+
+
+
+
 
 # analisys of linear model
 df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
@@ -114,4 +150,11 @@ hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
 close.screen(all.screens = T)
 anova(df.lm2)
 
+#boxcox
+boxcox((Yield)~D*E+A,data=df) 
+abline(v=c(0.5), col="green")
+
+
+df.lm3 <- lm(sqrt(Yield)~D*E+A,data=df)
+anova(df.lm3)
 
