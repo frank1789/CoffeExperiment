@@ -2,34 +2,18 @@
 rm(list = ls())
 close.screen(all = TRUE)
 
-#get and set working directory
+# get and set working directory
 getwd()
 setwd('/Users/francescoargentieri/ProjectR')
 
-
+# load library
 library(lubridate)
-
-
-times <- c("00:00", "05:10", "07:15", "09:00", "11:30")
-ms(times)
-## [1] "0S"      "5M 10S"  "7M 15S"  "9M 0S"   "11M 30S"
-You can then use as.period() to convert to the time unit you desire:
-  
-  as.period(ms(times), unit = "sec")
-## [1] "0S"   "310S" "435S" "540S" "690S"
-If you convert to numeric now, you will get the seconds as numbers:
-  
-  seconds <- as.numeric(as.period(ms(times), unit = "sec"))
-seconds
-## [1]   0 310 435 540 690
-
 
 df <- read.table("DesignMatrix-ResultWeight.dat", header = T)
 
-
-
 # define level
 lvl = c(-1, +1)
+
 # define five factor
 factors = list(
   A = lvl,
@@ -39,38 +23,77 @@ factors = list(
   E = lvl
 )
 
-# Definisco la design matrix
-df  <- expand.grid(A = lvl, B = lvl, C = lvl, D = lvl, E = lvl)
-df
-#data <- df$Yield
+# generate design matrix
+df  <- expand.grid(
+  A = lvl,
+  B = lvl,
+  C = lvl,
+  D = lvl,
+  E = lvl
+)
 
-times <- c(NA,NA,NA,NA,NA,NA,"12:54.96","16:30.25",NA,NA,NA,NA,"8:48.47","14:07.13",NA,NA,NA,"6:23.46","5:38.47",NA,NA,NA,NA,NA,NA,NA,NA,"6:02.69",NA,NA,NA,"9:38.08") 
-for(i in times){
-  #if (i != NA){
-    print(i)
-    YieldTime <- as.numeric(as.period(ms(times), unit = "sec"))
-  #}
-  
-  
+# result time of experiment
+times <-
+  c(
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    "12:54.96",
+    "16:30.25",
+    NA,
+    NA,
+    NA,
+    NA,
+    "8:48.47",
+    "14:07.13",
+    NA,
+    NA,
+    NA,
+    "6:23.46",
+    "5:38.47",
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    "6:02.69",
+    NA,
+    NA,
+    NA,
+    "9:38.08"
+  )
+
+# convert string time [mm:ss] -> time in numeric second [s]
+for (i in times) {
+  YieldTime <- as.numeric(as.period(ms(times), unit = "sec"))
 }
 
-
-
+# complte the dataframe
 (df <- data.frame(df, Yield = YieldTime))
-# Metodo di Daniels
 
-df.lm   <- lm(Yield~A*B*C*D*E, d = df)
-qqnorm(df.lm$res)
+# analisys of linear model
+df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
 anova(df.lm)
-# Estraggo gli effetti (escludendo l'intercetta)
+# the residual is equal to 0 then apply the Daniels method
+
+# Daniels method
+# Extract the effects by discarding the "Intercept" values
 effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
-qn      <- qqnorm(effects, datax = T, ylab = "Effects quantiles",
+qn      <- qqnorm(effects,
+                  datax = T,
+                  ylab = "Effects quantiles",
                   main = "Normal probability plot")
 text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
-qqline(effects, datax = T)
-grid()
+qqline(effects, datax = T, col = "dodgerblue")
 
-df.lm2 <- lm(Yield~A + D + C +B, data = df)
+# modify the linear model
+df.lm2 <- lm(Yield ~ A * B + E + D, data = df)
 qqnorm(df.lm2$res)
 anova(df.lm2)
 
