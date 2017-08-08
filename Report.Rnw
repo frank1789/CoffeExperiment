@@ -22,11 +22,11 @@
 \usepackage{mathtools}
 \usepackage[colorlinks=true]{hyperref}
 \hypersetup{
-	bookmarksnumbered=true,
-	linkcolor=black,
-	citecolor=black,
-	%pagecolor=black,
-	urlcolor=black,
+bookmarksnumbered=true,
+linkcolor=black,
+citecolor=black,
+%pagecolor=black,
+urlcolor=black,
 }
 \usepackage{verbatim}
 \usepackage{alltt}
@@ -109,12 +109,12 @@
 \title{Homework - Kinematics Calibration of a Differential drive wheelchair} % Article title
 
 \author{%
-	% Your name
-	\textsc{Francesco Argentieri}\thanks{ID: 183892}\\[1ex]
-	% Your institution
-	\normalsize University of Trento \\
-	% Your email address
-	\normalsize \href{mailto:francesco.argentieri@studenti.unitn.it}{francesco.argentieri@studenti.unitn.it}
+% Your name
+\textsc{Francesco Argentieri}\thanks{ID: 183892}\\[1ex]
+% Your institution
+\normalsize University of Trento \\
+% Your email address
+\normalsize \href{mailto:francesco.argentieri@studenti.unitn.it}{francesco.argentieri@studenti.unitn.it}
 }
 %\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
 %\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
@@ -124,8 +124,8 @@
 % Leave empty to omit a date
 \date{}
 \renewcommand{\maketitlehookd}{%
-	\begin{abstract}
-		\noindent  For a mobile robot, odometry calibration consists of the identification of a set of kinematic parameters that allow reconstructing the vehicle’s relative position and orientation starting from the wheels’ encoder measurements.
+\begin{abstract}
+\noindent  For a mobile robot, odometry calibration consists of the identification of a set of kinematic parameters that allow reconstructing the vehicle’s relative position and orientation starting from the wheels’ encoder measurements.
 The aim of the homework is to:
 estimate from the encoder and the camera data the kinematics parameters wheels radius “$r_\textsc{l}$" and “$r_\textsc{r}$" and wheelbase “b".
 Estimate the camera position with respect to the wheelchair reference point (the mid point between the wheels).
@@ -162,21 +162,98 @@ which shows that the location parameter of the Ozone
 distribution varies significantly from month to month. Finally we include a boxplot of the data:
 %\begin{center} \includegraphics{example -1-002} \end{center}
 First we define a figure hook:
-<<results=hide>>=
-options(SweaveHooks = list(fig = function() par(mfrow=c(2,2))))
-@
 Then we setup variable definitions without actually evaluating them
 <<xydef,eval=false>>=
 x <- 1:10
 y <- rnorm(x)
 @
+<<results=hide>>=
+################################
+# define level
+lvl = c(-1, +1)
+
+# define five factor
+factors = list(
+  A = lvl,
+  B = lvl,
+  C = lvl,
+  D = lvl,
+  E = lvl
+)
+
+# Definisco la design matrix
+df  <- expand.grid(
+  A = lvl,
+  B = lvl,
+  C = lvl,
+  D = lvl,
+  E = lvl
+)
+
+# result yield experimet
+YieldWeight <-
+  c(
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    12,
+    46,
+    NA,
+    NA,
+    NA,
+    NA,
+    100,
+    84,
+    NA,
+    NA,
+    NA,
+    132,
+    106,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    NA,
+    134,
+    NA,
+    NA,
+    NA,
+    106
+  )
+
+# complte the dataframe
+(df <- data.frame(df, Yield = YieldWeight))
+df
+write.table(df, "prova28.txt", col.names = T, row.names = F, quote = F )
+# analisys of linear model
+df.lm   <- lm(Yield ~ A * B * C * D * E, d = df)
+anova(df.lm)
+# the residual is equal to 0 then apply the Daniels method
+@
 Then we put the pieces together:
 \begin{center}
-<<fig=T>>=
+<<fig=F>>=
 <<xydef>>
-lm1 <- lm(y~x)
+  lm1 <- lm(y~x)
 summary(lm1)
 plot(lm1)
+@
+\end{center}
+\begin{center}
+<<fig=T,echo=T>>=
+# Estraggo gli effetti (escludendo l'intercetta)
+effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
+qn      <- qqnorm(effects, datax = T, ylab = "Effects quantiles",
+                  main = "Normal probability plot")
+text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
+qqline(effects, datax = T, col ="red")
+grid()
 @
 \end{center}
 \end{document}
