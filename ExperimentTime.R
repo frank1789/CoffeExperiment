@@ -129,7 +129,7 @@ text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
 qqline(effects, datax = T, col = "dodgerblue")
 
 # modify the linear model
-df.lm2 <- lm(Yield ~ A * B + E + D, data = df)
+df.lm2 <- lm(Yield ~ A * B + E + C, data = df)
 qqnorm(df.lm2$res)
 anova(df.lm2)
 
