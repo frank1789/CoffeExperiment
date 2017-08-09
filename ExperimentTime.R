@@ -13,73 +13,8 @@ library(MASS)
 # read dataframe from file with result
 df <- read.table("DesignMatrix-ResultTime.dat", header = T)
 
-# # define level
-# lvl = c(-1, +1)
-# 
-# # define five factor
-# factors = list(
-#   A = lvl,
-#   B = lvl,
-#   C = lvl,
-#   D = lvl,
-#   E = lvl
-# )
-# 
-# # generate design matrix
-# df  <- expand.grid(
-#   A = lvl,
-#   B = lvl,
-#   C = lvl,
-#   D = lvl,
-#   E = lvl
-# )
-# 
-# # result time of experiment
-# times <-
-#   c(
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     "12:54.96",
-#     "16:30.25",
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     "8:48.47",
-#     "14:07.13",
-#     NA,
-#     NA,
-#     NA,
-#     "6:23.46",
-#     "5:38.47",
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     NA,
-#     "6:02.69",
-#     NA,
-#     NA,
-#     NA,
-#     "9:38.08"
-#   )
-
-# convert string time [mm:ss] -> time in numeric second [s]
-# for (i in times) {
-#   YieldTime <- as.numeric(as.period(ms(times), unit = "sec"))
-# }
-
-
 # convert string time [mm:ss] -> time in numeric second [s]
 df$Yield <- as.numeric(as.period(ms(df$Yield), unit = "sec"))
-
 
 df$WaterType <-
   factor(
@@ -95,10 +30,6 @@ df$Heat <- factor(df$Heat,
                   levels = c('Low', 'High'),
                   labels = c('-', '+'))
 
-# names(df)
-# length(df)
-# df <-df[3:(length(df))]
-# df
 names(df)[3] <- "A"
 names(df)[4] <- "B"
 names(df)[5] <- "C"
@@ -106,12 +37,6 @@ names(df)[6] <- "D"
 names(df)[7] <- "E"
 
 df
-
-
-
-
-
-
 
 # analisys of linear model
 df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
@@ -129,7 +54,7 @@ text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
 qqline(effects, datax = T, col = "dodgerblue")
 
 # modify the linear model
-df.lm2 <- lm(Yield ~ A * B + E + C, data = df)
+df.lm2 <- lm(Yield ~ A*B+ E + C, data = df)
 qqnorm(df.lm2$res)
 anova(df.lm2)
 
