@@ -1,18 +1,25 @@
-\documentclass[11pt,a4paper,english]{article}
-\title{Sweave Example 1}
+%========================================
+% PREAMBOLO
+%========================================
+
+% === Impostazione del documento ==========================
+\documentclass[12pt,a4paper,twoside,english,italian,hidelinks]{book}
 \pagenumbering{arabic}
 \usepackage{setspace}
-%\onehalfspace
-\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry}
+\onehalfspace
+
+% === Regolazione dei margini =============================
+\addtolength{\oddsidemargin}{30pt}
+\addtolength{\evensidemargin}{-30pt}
 \usepackage{fancyhdr}
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage[section]{placeins}
-%--Text and Style------------------------------------------------------------------------
-\usepackage{microtype} 			% Slightly tweak font spacing for aesthetics
-\usepackage[english]{babel} 		% Language hyphenation and typographical rules
+
+% === Impostazione dei font ===============================
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
 \usepackage{ae}
 \usepackage{relsize}
 \usepackage{csquotes}
@@ -22,11 +29,11 @@
 \usepackage{mathtools}
 \usepackage[colorlinks=true]{hyperref}
 \hypersetup{
-bookmarksnumbered=true,
-linkcolor=black,
-citecolor=black,
-%pagecolor=black,
-urlcolor=black,
+	bookmarksnumbered=true,
+	linkcolor=black,
+	citecolor=black,
+	%pagecolor=black,
+	urlcolor=black,
 }
 \usepackage{verbatim}
 \usepackage{alltt}
@@ -36,7 +43,6 @@ urlcolor=black,
 \DeclarePairedDelimiter{\norma}{\lVert}{\rVert}
 
 %---Figure------------------------------------------------------------------------------
-
 \usepackage{graphicx}
 \graphicspath{{./imgs/}}
 \renewcommand{\figurename}{Fig.}
@@ -48,6 +54,8 @@ urlcolor=black,
 \usepackage{algpseudocode}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{Sweave}
+
 %---Table------------------------------------------------------------
 \usepackage{tabularx}
 \usepackage{array}
@@ -57,31 +65,6 @@ urlcolor=black,
 \usepackage{pgfplotstable}
 \usepackage{makecell}
 \usepackage{booktabs}
-
-%--------------------------------------------------------------------
-% Allows abstract customization
-\usepackage{abstract}
-
-% Set the "Abstract" text to bold
-\renewcommand{\abstractnamefont}{\normalfont\bfseries}
-% Set the abstract itself to small italic text
-\renewcommand{\abstracttextfont}{\normalfont\small\itshape}
-
-% Allows customization of titles
-\usepackage{titlesec}
-
-% Roman numerals for the sections
-\renewcommand\thesection{\Roman{section}}
-
-% roman numerals for subsections
-\renewcommand\thesubsection{\roman{subsection}}
-
-% Change the look of the section titles
-\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{}
-
-% Change the look of the section titles
-\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{}
-\usepackage{titling} % Customizing the title section
 
 %----------------------------------------------------------------------------------------
 \usepackage{tikz,fp,ifthen,fullpage}
@@ -94,166 +77,51 @@ urlcolor=black,
 \usepackage{tikz-dimline, calc}
 \pgfplotsset{compat=newest}
 
-%----------------------------------------------------------------------------------------
-%	TITLE SECTION
-%----------------------------------------------------------------------------------------
-\setlength{\droptitle}{-4\baselineskip} % Move the title up
+% === Per la bibliografia multicolonna =======================
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\list}{\begin{multicols}{2}\smaller\list}{}{}
+\appto{\endthebibliography}{\end{multicols}}
+%==Per le figure latex===================================
+%Package e librerie per TikZ e PGF, le librerie non sono tutte necessarie a questo documento LATEX.
+     \usepackage{tikz,fp,ifthen,fullpage}
+     \usepackage{pgfmath}
+     \usetikzlibrary{backgrounds}
+     \usetikzlibrary{decorations.pathmorphing,backgrounds,fit,calc,through}
+     \usetikzlibrary{arrows}
+     \usetikzlibrary{shapes,decorations,shadows}
+     %\usetikzlibrary{shapes.scopes}
+     \usetikzlibrary{fadings}
+     \usetikzlibrary{patterns}
+     \usetikzlibrary{mindmap}
+     \usetikzlibrary{decorations.text}
+     \usetikzlibrary{decorations.shapes}
+      \usepackage{pgfplots}
+\pgfplotsset{compat=1.13}
 
+%========================================
+% TESTO DELLA TESI
+%========================================
 
-\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
-
-
-\posttitle{\end{center}} % Article title closing formatting
-
-
-\title{Homework - Kinematics Calibration of a Differential drive wheelchair} % Article title
-
-\author{%
-% Your name
-\textsc{Francesco Argentieri}\thanks{ID: 183892}\\[1ex]
-% Your institution
-\normalsize University of Trento \\
-% Your email address
-\normalsize \href{mailto:francesco.argentieri@studenti.unitn.it}{francesco.argentieri@studenti.unitn.it}
-}
-%\and % Uncomment if 2 authors are required, duplicate these 4 lines if more
-%\textsc{Jane Smith}\thanks{Corresponding author} \\[1ex] % Second author's name
-%\normalsize University of Utah \\ % Second author's institution
-%\normalsize \href{mailto:jane@smith.com}{jane@smith.com} % Second author's email address
-
-% Leave empty to omit a date
-\date{}
-\renewcommand{\maketitlehookd}{%
-\begin{abstract}
-\noindent  For a mobile robot, odometry calibration consists of the identification of a set of kinematic parameters that allow reconstructing the vehicle’s relative position and orientation starting from the wheels’ encoder measurements.
-The aim of the homework is to:
-estimate from the encoder and the camera data the kinematics parameters wheels radius “$r_\textsc{l}$" and “$r_\textsc{r}$" and wheelbase “b".
-Estimate the camera position with respect to the wheelchair reference point (the mid point between the wheels).
-\end{abstract}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-%\author{Friedrich Leisch}
-\usepackage{Sweave}
 \begin{document}
-\SweaveOpts{concordance=TRUE}
-\maketitle
-In this example we embed parts of the examples from the \texttt{kruskal.test} help page into a \LaTeX{} document:
-\begin{Schunk} \begin{Sinput}
-> data(airquality , package="datasets")
-> library (" stats ")
-> kruskal.test(Ozone ~ Month, data = airquality) \end{Sinput}
-\begin{Soutput}
-Kruskal -Wallis rank sum test
-data: Ozone by Month
-Kruskal-Wallis chi-squared = 29.267, df = 4, p-value = 6.901e-06 \end{Soutput}
-\end{Schunk}
-which shows that the location parameter of the Ozone
-distribution varies significantly from month to month. Finally we include a boxplot of the data:
-%\begin{center} \includegraphics{example -1-002} \end{center}
-First we define a figure hook:
-Then we setup variable definitions without actually evaluating them
-<<xydef,eval=false>>=
-x <- 1:10
-y <- rnorm(x)
-@
-<<results=hide>>=
-################################
-# define level
-lvl = c(-1, +1)
+\SweaveOpts{concordance=TRUE, echo=true}
+	% === Frontespizio ====================================
+	\pagestyle{empty}
+	\input{frontespizio}
+	% === Indice =========================================
+	\tableofcontents
 
-# define five factor
-factors = list(
-  A = lvl,
-  B = lvl,
-  C = lvl,
-  D = lvl,
-  E = lvl
-)
+	% === Capitoli Tesi ===================================
+	\pagestyle{plain}
+	\input{1.tex}
+	\SweaveInput{Statistica.Rnw}
 
-# Definisco la design matrix
-df  <- expand.grid(
-  A = lvl,
-  B = lvl,
-  C = lvl,
-  D = lvl,
-  E = lvl
-)
 
-# result yield experimet
-YieldWeight <-
-  c(
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    12,
-    46,
-    NA,
-    NA,
-    NA,
-    NA,
-    100,
-    84,
-    NA,
-    NA,
-    NA,
-    132,
-    106,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    NA,
-    134,
-    NA,
-    NA,
-    NA,
-    106
-  )
+	%\input{conclusione}
 
-# complte the dataframe
-(df <- data.frame(df, Yield = YieldWeight))
-df
-write.table(df, "prova28.txt", col.names = T, row.names = F, quote = F )
-# analisys of linear model
-df.lm   <- lm(Yield ~ A * B * C * D * E, d = df)
-anova(df.lm)
-# the residual is equal to 0 then apply the Daniels method
-@
-Then we put the pieces together:
-\begin{center}
-<<fig=F>>=
-<<xydef>>
-  lm1 <- lm(y~x)
-summary(lm1)
-plot(lm1)
-@
-\end{center}
-\begin{center}
-<<fig=T,echo=T>>=
-# Estraggo gli effetti (escludendo l'intercetta)
-effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
-qn      <- qqnorm(effects, datax = T, ylab = "Effects quantiles",
-                  main = "Normal probability plot")
-text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
-qqline(effects, datax = T, col ="red")
-grid()
-@
-\end{center}
+	% === Bibliografia ====================================
+	\newpage
+	\bibliographystyle{IEEEtran}
+	\bibliography{bibliografia-tesi.bib}
+
 \end{document}
+
