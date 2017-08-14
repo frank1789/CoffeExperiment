@@ -17,7 +17,7 @@ library(MASS)
 <<>>=
 df <- read.table("DesignMatrix-ResultWeight.dat", header = T)
 @
-Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni con delle label codificate da lettere maiuscole per indentificare i fattori e si sostiutisocno i valori con i segni "-"  e "+" per identificare i livelli.
+\noindent Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni con delle label codificate da lettere maiuscole per indentificare i fattori e si sostiutisocno i valori con i segni "-"  e "+" per identificare i livelli.
 <<echo=FALSE>>=
   df$WaterType <-
     factor(
@@ -42,37 +42,36 @@ Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni co
 <<>>=
   df
 @
-
-Si procede quindi all'anlisi del piano fattoriale mediante un modello lineare completo secondo $(Yeld \sim A*B*C*D*E)$:
+\noindent Si procede quindi all'anlisi del piano fattoriale mediante un modello lineare completo secondo $(Yield \sim A*B*C*D*E)$:
 <<results=>>=
 df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
 anova(df.lm)
 @
-Si osserva nella tabella \textsc{anova} il valore dei residui è pari a zero, dato che il piano non è replicato si applica il metodo di Daniel; dove si esamina il diagramma di probabilità normale per gli effetti calcolati secondo il modello lineare prima visto $(Yield \sim A * B * C * D * E)$, si ricava il vettore degli effetti meno l'intercetta:
-\begin{figure}[!h]
+\noindent Si osserva nella tabella \textsc{anova} il valore dei residui è pari a zero, dato che il piano non è replicato si applica il metodo di Daniel; dove si esamina il diagramma di probabilità normale per gli effetti calcolati secondo il modello lineare prima visto $(Yield \sim A * B * C * D * E)$, si ricava il vettore degli effetti meno l'intercetta:\newpage
+\begin{figure}[htb]
 \centering
 <<fig=T,echo=TRUE>>=
 effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
 qn      <- qqnorm(effects,
-                  datax = T, ylab = "Effects Quantiles", 
+                  datax = T, 
+                  ylab = "Effects Quantiles", 
                   main = "Normal probability plot")
 text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4)
 qqline(effects,  datax = T, col = "dodgerblue")
 @
 \caption{da inserire}
 \label{fig:EffectsQuantile1}
-\end{figure}\\\\
-Modifichiamo il modello lineare escludendo gli effetti che non sono significativi, cioè risentono solo dell'errore sperimentale e sono quindi distribuiti lungo la retta normale, visti in figua \ref{fig:EffectsQuantile1}. Il nuovo modello lineare assume la relazione ($Yield \sim A * C * D + B * E$), si ricalcola il modello \textsc{anova} quindi si procede alla verifica adeguatezza verificando normalità dei residui e assenza di pattern.
+\end{figure}
+\noindent Modifichiamo il modello lineare escludendo gli effetti che non sono significativi, cioè risentono solo dell'errore sperimentale e sono quindi distribuiti lungo la retta normale, visti in figua \ref{fig:EffectsQuantile1}. Il nuovo modello lineare assume la relazione ($Yield \sim A * C * D + B * E$), si ricalcola il modello \textsc{anova} quindi si procede alla verifica adeguatezza verificando normalità dei residui e assenza di pattern.
 <<result=>>=
 df.lm2 <- lm(Yield ~ A * C * D + B * E, data = df)
 anova(df.lm2)
-shapiro.test(df.lm2$residuals)
 @
 <<echo=F,results=hide>>=
-  options(SweaveHooks = list(fig = function() par(mfrow=c(2,2)))) 
+options(SweaveHooks = list(fig = function() par(mfrow=c(2,2)))) 
 @
 Si effettua la verifica dell'adeguatezza del modello:
-\begin{figure}[!h]
+\begin{figure}[htb]
 \centering
 <<fig=T,echo=F>>=
 qqnorm(df.lm2$res, datax = T, main = "QQ-plot residuals")
@@ -84,15 +83,14 @@ hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
 \caption{Modello lineare ($Yield \sim A * C * D + B * E$), analisi dei residui}
 \label{fig:qunatilePlotResidual}
 \end{figure}
-In figura \ref{fig:qunatilePlotResidual} si osserva una distribuzione non propriamente normale quindi si modifica il modello escudendo quei fattori prima considerati, ma vicini alla retta.
-Quindi si assumeuna relazione ($Yield \sim A * C + B * E$) e si performa \textsc{anova}:
-%# linear model 3
+\newpage \noindent In figura \ref{fig:qunatilePlotResidual} si osserva una distribuzione non propriamente normale quindi si modifica il modello escudendo quei fattori prima considerati, ma vicini alla retta.\\\newpage
+\noindent Data il passo valore ottenuto per il fattore D, si assume una relazione ($Yield \sim A * C + B * E$) ricalcolando \textsc{anova}:
 <<>>=
-df.lm3 <- lm(Yield ~ A + C + B * E, data = df)
+df.lm3 <- lm(Yield ~ A * C + B * E, data = df)
 anova(df.lm3)
 @
 Si esegue il controllo di adegutezza del modello:
-\begin{figure}[!h]
+\begin{figure}[htb]
 \centering
 <<fig=T,echo=F>>=
 # permorm MAC
@@ -100,14 +98,10 @@ qqnorm(df.lm3$residuals, datax = T, main = "QQ-plot residuals")
 qqline(df.lm3$residuals, datax = T, col = "red")
 plot(df.lm3$fitted.values, df.lm3$residuals , ylab = "Residuals" , xlab = "Fitted",
      main = "Fitted values pattern")
-
 hist(df.lm3$residuals, xlab = "Residuals", main = "Histogram of residuals")
 @
-\caption{modello lineare ($Yield \sim A + C + B * E$), analisi dei residui}
+\caption{modello lineare ($Yield \sim A * C + B * E$), analisi dei residui}
 \label{fig:ReisdualLm3}
 \end{figure}
-Ulteriore conferma ci viene data eseguendo lo Shapiro-Test sul modello:
-<<>>=
-shapiro.test(df.lm3$residuals)
-@
-Ottenendo così un valore del $4,9\%$ di commettere un errore di tipo I.
+L'ultima relazione analizzata mostra una distribuzione normale dei residui ed è da preferire alle precedenti dove si evince una distribuzione normale e l'assenza di pattern.
+
