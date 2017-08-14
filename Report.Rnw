@@ -112,8 +112,9 @@
 
 	% === Capitoli Tesi ===================================
 	\pagestyle{plain}
-	\input{1.tex}
-	\SweaveInput{Statistica.Rnw}
+	\input{introduzione.tex}
+	\SweaveInput{esperimentopeso.Rnw}
+	\SweaveInput{esperimentotempo.Rnw}
 
 
 	%\input{conclusione}
