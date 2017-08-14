@@ -54,32 +54,38 @@ text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
 qqline(effects, datax = T, col = "dodgerblue")
 
 # modify the linear model
-df.lm2 <- lm(Yield ~ A*B+ E + C, data = df)
-qqnorm(df.lm2$res)
+df.lm2 <- lm(Yield ~ A * B * D + C * E, data = df)
 anova(df.lm2)
 
-
-#df.lm2 <- lm(Yield~A+D*E, d = df1)
-#anova(df.lm2)
-
-# Guardo se il modello ? adeguato con qqplot
-
-
+# MAC - model accuracy  
 qqnorm(df.lm2$residuals, datax = T, main = "QQ-plot residuals")
-qqline(df.lm2$residuals, datax = T)
-
-plot(df.lm2$fitted.values, df.lm2$residuals , ylab = "Residuals" , xlab = "Fitted",
+qqline(df.lm2$residuals, datax = T, col = "red")
+plot(df.lm2$fitted.values, df.lm2$residuals, ylab = "Residuals" , xlab = "Fitted values",
      main = "Fitted values pattern")
-
 hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
-close.screen(all.screens = T)
-anova(df.lm2)
 
-#boxcox
-boxcox((Yield)~D*E+A,data=df) 
-abline(v=c(0.5), col="green")
-
-
-df.lm3 <- lm(sqrt(Yield)~D*E+A,data=df)
+# linear model 3 - without interaction
+df.lm3 <- lm(Yield ~ A + C + E, data = df)
 anova(df.lm3)
+
+# check MAC
+qqnorm(df.lm3$residuals, datax = T, main = "QQ-plot residuals")
+qqline(df.lm3$residuals, datax = T, col = "red")
+plot( df.lm3$fitted.values, df.lm3$residuals, ylab = "Residuals" , xlab = "Fitted values",
+      main = "Fitted values pattern")
+hist(df.lm3$residuals, xlab = "Residuals", main = "Histogram of residuals")
+
+# inteaction plot
+interaction.plot(df$A,df$B,df$Yield, xlab = "WaterLevel", ylab = "WaterType")
+interaction.plot(df$A,df$C,df$Yield, xlab = "WaterLevel", ylab = "Coffeload")
+interaction.plot(df$A,df$D,df$Yield, xlab = "WaterLevel", ylab = "Pressing")
+interaction.plot(df$A,df$E,df$Yield, xlab = "WaterLevel", ylab = "Heat")
+interaction.plot(df$B,df$C,df$Yield, xlab = "WaterType", ylab = "CoffeLoad")
+interaction.plot(df$B,df$D,df$Yield, xlab = "WaterType", ylab = "Pressing")
+interaction.plot(df$B,df$E,df$Yield, xlab = "WaterType", ylab = "Heat")
+interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Heat")
+interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Heat")
+
+shapiro.test(df.lm2$residuals)
+shapiro.test(df.lm3$residuals)
 

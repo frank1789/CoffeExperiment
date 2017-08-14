@@ -43,40 +43,52 @@ qn      <- qqnorm(effects,
                   ylab = "Effects Quantiles",
                   main = "Normal probability plot")
 text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
-qqline(effects,  datax = T, col = "red")
-################################# fin qui ok
+qqline(effects,  datax = T, col = "dodgerblue")
+
 # modify the linear model
-df.lm2 <- lm(Yield ~ C , data = df)
+df.lm2 <- lm(Yield ~ A*C*D + B * E , data = df)
+anova(df.lm2)
+
+# MAC lm2
 qqnorm(df.lm2$residuals)
-qqline(df.lm2$residuals)
-anova(df.lm2)
-summary(df.lm2)
-plot(df.lm2$fit, df.lm2$res, xlab = "residuals", ylab = "fittedvalue")
-#df.lm2 <- lm(Yield~A+D*E, d = df1)
-#anova(df.lm2)
-
-# Guardo se il modello ? adeguato con qqplot
-
-
-qqnorm(df.lm2$residuals, main = "QQ-plot residuals")
-qqline(df.lm2$residuals, )
-
-plot(df.lm2$fitted.values, df.lm2$residuals , ylab = "Residuals" , xlab = "Fitted",
-     main = "Fitted values pattern")
-
+qqline(df.lm2$residuals, col = "red")
+plot(df.lm2$fit, df.lm2$res, xlab = "Fitted values", ylab = "Residuals")
 hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
-close.screen(all.screens = T)
-anova(df.lm2)
-shapiro.test(df.lm2$residuals)
-qqnorm(df.lm2$residuals, datax = T, main = "QQ-plot residuals")
-qqline(df.lm2$residuals, datax = T)
-interaction.plot(df$E,df$A,df$Yield, xlab = "A", ylab = "B")
 
-
-boxcox((Yield)~C,data=df) 
-abline(v=c(0.5), col="green")
-
-
-df.lm3 <- lm(sqrt(Yield)~C+B*D,data=df)
+# linear model 3
+df.lm3 <- lm(Yield ~ A + B * E *C , data = df)
 anova(df.lm3)
 
+# permorm MAC
+qqnorm(df.lm3$residuals, datax = T, main = "QQ-plot residuals")
+qqline(df.lm3$residuals, datax = T, col = "red")
+plot(df.lm3$fitted.values, df.lm3$residuals , ylab = "Residuals" , xlab = "Fitted",
+     main = "Fitted values pattern")
+
+hist(df.lm3$residuals, xlab = "Residuals", main = "Histogram of residuals")
+shapiro.test(df.lm3$residuals)
+#######################################
+
+# linear model 4
+df.lm4 <- lm(Yield ~ C+A, data = df)
+anova(df.lm4)
+qqnorm(df.lm4$residuals, main = "QQ-plot residuals")
+qqline(df.lm4$residuals, col="red" )
+
+plot(df.lm4$fitted.values, df.lm3$residuals , ylab = "Residuals" , xlab = "Fitted",
+     main = "Fitted values pattern")
+
+hist(df.lm4$residuals, xlab = "Residuals", main = "Histogram of residuals")
+
+
+interaction.plot(df$A,df$B,df$Yield, xlab = "A", ylab = "B")
+interaction.plot(df$A,df$C,df$Yield, xlab = "A", ylab = "B")
+interaction.plot(df$A,df$D,df$Yield, xlab = "A", ylab = "B")
+interaction.plot(df$B,df$C,df$Yield, xlab = "A", ylab = "B")
+interaction.plot(df$B,df$D,df$Yield, xlab = "A", ylab = "B")
+interaction.plot(df$C,df$E,df$Yield, xlab = "A", ylab = "B")
+interaction.plot(df$D,df$E,df$Yield, xlab = "A", ylab = "B")
+interaction.plot(df$B,df$E,df$Yield, xlab = "A", ylab = "B")
+
+boxcox(Yield~A+C+E,data=df)
+abline(v=c(1.5), col="green")
