@@ -1,0 +1,84 @@
+\chapter{Analisi}
+Attraverso l'uso di R si è realizzata la matrice degli esperimenti, \emph{Design Matrix}, nella quale si realizzano le combinazioni dei fattori prima descritti e i reltivi livelli. Quindi si è creata una funzione che generare questa matrice ed aassocia un combinazione casuale di numeri per il \emph{run order} e infine la scrive su file. Poi sono stati realizzate le prove.
+In quanto si sono realizzate più prove in successione si è preferito eseguire il run order generato casualmenete, successivamente sono stati registrati i risultati nel dataframe.
+<<echo=F,results=hide>>=
+# Clean work space and screen options
+rm(list = ls())
+close.screen(all = TRUE)
+
+# get and set working directory
+getwd()
+setwd('/Users/francescoargentieri/ProjectR')
+
+# load library
+library(lubridate)
+library(MASS)
+@
+<<>>=
+df <- read.table("DesignMatrix-ResultWeight.dat", header = T)
+@
+Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni con delle label codificate da lettere maiuscole per indentificare i fattori e si sostiutisocno i valori con i segni "-"  e "+" per identificare i livelli.
+<<>>=
+  df$WaterType <-
+    factor(
+      df$WaterType,
+      levels = c('Levissima', 'SanBenedetto'),
+      labels = c('-', '+')
+    )
+  df$Pressing <-
+    factor(df$Pressing,
+           levels = c('No', 'Yes'),
+           labels = c('-', '+'))
+  df$Heat <- factor(df$Heat,
+                    levels = c('Low', 'High'),
+                    labels = c('-', '+'))
+
+  names(df)[3] <- "A"
+  names(df)[4] <- "B"
+  names(df)[5] <- "C"
+  names(df)[6] <- "D"
+  names(df)[7] <- "E"
+  df
+@
+
+Si procede quindi all'anlisi del piano fattoriale mediante un modello lineare completo secondo $(Yeld \sim A*B*C*D*E)$:
+<<results=>>=
+df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
+anova(df.lm)
+@
+Si osserva che nella tabella \textsc{anova} che il valore dei residui è pari a zero, dato che il piano non è replicato quindi si applica il metodo di Daniel; si esamina il diagramma di propabilità normale per gli effetti calcolati secondo il modello lineare prima visto $(Yield \sim A*B*C*D*E)$, si ricava il ettore degli effeti meno l'intercetta:
+\begin{figure}[!h]
+\centering
+<<fig=T,echo=TRUE>>=
+effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
+qn      <- qqnorm(effects,
+                  datax = T, ylab = "Effects Quantiles", 
+                  main = "Normal probability plot")
+text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4)
+qqline(effects,  datax = T, col = "dodgerblue")
+@
+\caption{da inserire}
+\label{fig:EffectsQuantile1}
+\end{figure}\\
+Modifichiamo il modello lineare escludendo gli effetti che non sono significativi, cioè risentono solo dell'errore sperimentale e sono quindi distribuiti lungo la retta normale, visti in figua \ref{fig:EffectsQuantile1}. Il nuovo modello lineare assume la relazione ($Yield \sim A + C * B * E$), si ricalcola il modello \textsc{anova} quindi si procede alla verifica adeguatezza verificando normalità dei e assenza di pattern.
+<<result=>>=
+df.lm2 <- lm(Yield ~ A + C * B * E, data = df)
+anova(df.lm2)
+@
+Si effettua la verifica dell'adeguatezza del modello:
+<<echo=F,results=hide>>=
+  options(SweaveHooks = list(fig = function() par(mfrow=c(2,2)))) 
+@
+\begin{figure}[htb]
+\centering
+<<fig=T,echo=F>>=
+qqnorm(df.lm2$res, datax = T, main = "QQ-plot residuals")
+qqline(df.lm2$res, datax = T, col = "red")
+plot(df.lm2$fit, df.lm2$residuals, ylab = "Residuals", xlab = "Fitted values", 
+     main = "Fitted values pattern")
+hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals") 
+@
+\caption{}
+\label{fig:qunatilePlotResidula}
+\end{figure}
+

@@ -1,0 +1,123 @@
+\chapter{Esperimento Tempo}
+In questa parte dell'eperimento si registra nella designmatrix i valori del tempo assunti come resa del processo, si è inoltre assunto di misurare l'intero processo in modo da ridurre il peso dell'errore nella misura del tempo invece che regstrare il tempo di estrazione.
+Una volta terminate la campagna di prove si riportano i risultati nel dataframe. 
+<<echo=F,results=hide>>=
+# Clean work space and screen options
+rm(list = ls())
+close.screen(all = TRUE)
+
+# get and set working directory
+getwd()
+setwd('/Users/francescoargentieri/ProjectR')
+
+# load library
+library(lubridate)
+library(MASS)
+@
+<<>>=
+df <- read.table("DesignMatrix-ResultTime.dat", header = T)
+@
+Nell' importazione del dataframe si effetua una conversione della rispota Yield dal formato [mm:ss] (minuti e secondi) in quantità numerica espressa in secondi [s] tramite la funzione:
+<<>>=
+df$Yield <- as.numeric(as.period(ms(df$Yield), unit = "sec"))
+@
+Si codificano i valori in fattori espressi da "+" e "-", poi con il comando “\emph{label}" si sostiutiscono i nomi delle colonne con lettere maiuscole.
+<<result=hide>>=
+df$WaterType <-
+  factor(
+  df$WaterType,
+  levels = c('Levissima', 'SanBenedetto'),
+  labels = c('-', '+'))
+  df$Pressing <-
+  factor(df$Pressing,
+  levels = c('No', 'Yes'),
+  labels = c('-', '+'))
+  df$Heat <-
+  factor(df$Heat,
+  levels = c('Low', 'High'),
+  labels = c('-', '+'))
+
+names(df)[3] <- "A"
+names(df)[4] <- "B"
+names(df)[5] <- "C"
+names(df)[6] <- "D"
+names(df)[7] <- "E"
+@
+Quindi si verifica il risultato ottenuto:
+<<>>=
+df
+@
+Ora si definisce un modello lineare espreeso dalla seguente relazione $(Yield \sim A*B*C*D*E)$, ricavo la tabella \emph{anova}:
+<<>>=
+df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
+anova(df.lm)
+@
+Si osserva immediatamente che i residui sono nulli, è necessario modificare il modello lineare, per questo si farà uso del metodo di Daniels per verificare l'interazione degli effetti, elimendado la i valori dell'intercetta otteremo:
+\begin{figure}[htb] 
+\centering
+<<fig=TRUE, echo=FALSE>>=
+effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
+qn      <- qqnorm(effects,
+                  datax = T,
+                  ylab = "Effects quantiles",
+                  main = "Normal probability plot")
+text(qn$x, qn$y, lab = names(df.lm$effects)[2:length(df.lm$effects)], pos = 4 )
+qqline(effects, datax = T, col = "dodgerblue")
+@
+\label{fig:QuantileEffectTime}
+\end{figure}
+Dalla figura \ref{fig:QuantileEffectTime} osserviamo che gli effetti più significativi, sono quelli che si discostano dalla retta
+Il modello viene modificato utilizzando la relazione $(Yield \sim A * B * D + C * E)$ quindi ricaviamo la tabella \textsc{anova} e determinare la significatività degli effetti:
+<<>>=
+df.lm2 <- lm(Yield ~ A * B * D + C * E, data = df)
+anova(df.lm2)
+@
+La validità del modello avviene verificando la normalità dei residui e l'assenza di pattern: 
+\begin{figure}[htb]
+\centering
+<<fig=T,echo=F>>=
+qqnorm(df.lm2$residuals, datax = T)
+qqline(df.lm2$residuals, datax = T, col = "red")
+plot(df.lm2$fit, df.lm2$res, xlab = "Fitted values", ylab = "Residuals")
+hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
+@
+\label{fig:lm2Time}
+\end{figure}
+Si osserva una distribuzione normale nell'istrogramma e l'assenza di pattern nel "Fitted value Pattern". Dato un basso valore \emph{pvalue} nelle interazioni A:B, A:D, B:D, C:E, modifichiamo di conseguenza il modello, impostando una relazione in cui non viene considerata la possitbilità di interazione tra i fattori, che più si discostano dalla retta in figura \ref{fig:QuantileEffect}, Time$(Yield \sim A + C + E)$, ottendo:
+<<>>=
+df.lm3 <- lm(Yield ~ A + C + E, data = df)
+anova(df.lm3)
+@
+Verifichiamo l'adeguatezza del modello:
+\begin{figure}[htb] 
+\centering
+<<fig=TRUE, echo=FALSE>>=
+qqnorm(df.lm3$residuals, datax = T, main = "QQ-plot residuals")
+qqline(df.lm3$residuals, datax = T, col = "red")
+plot(df.lm3$fitted.values, df.lm3$residuals, ylab = "Residuals", xlab = "Fitted values",
+    main = "Fitted values pattern")
+hist(df.lm3$residuals, xlab = "Residuals", main = "Histogram of residuals")
+@
+\label{fig:MACTime}
+\end{figure}
+Si nota che il grafico Fitted value Patterns mostra un andamento oscillante dei residui, il quale permette di rigettare il nuovo modello, mantenedo quello completo di interazione.
+\begin{figure}[htb]
+\centering
+<<fig=T,echo=F>>=
+interaction.plot(df$A,df$B,df$Yield, xlab = "WaterLevel", ylab = "WaterType")
+interaction.plot(df$A,df$C,df$Yield, xlab = "WaterLevel", ylab = "Coffeload")
+interaction.plot(df$A,df$D,df$Yield, xlab = "WaterLevel", ylab = "Pressing")
+interaction.plot(df$A,df$E,df$Yield, xlab = "WaterLevel", ylab = "Heat")
+@
+<<fig=T,echo=F>>=
+interaction.plot(df$B,df$C,df$Yield, xlab = "WaterType", ylab = "CoffeLoad")
+interaction.plot(df$B,df$D,df$Yield, xlab = "WaterType", ylab = "Pressing")
+interaction.plot(df$B,df$E,df$Yield, xlab = "WaterType", ylab = "Heat")
+interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Heat")
+@
+\end{figure}
+\begin{figure}
+<<fig=T,echo=F>>=
+interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Heat")
+@
+\end{figure}
