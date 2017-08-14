@@ -1,33 +1,33 @@
 RunOrder	StdOrder	WaterLvl	WaterType	CoffeLoad	Pressing	Heat	Yield
-28	1	12	Levissima	6.5	No	Low	NA
-22	2	36	Levissima	6.5	No	Low	NA
-6	3	12	San Benedetto	6.5	No	Low	NA
-29	4	36	San Benedetto	6.5	No	Low	NA
-26	5	12	Levissima	8.5	No	Low	NA
-19	6	36	Levissima	8.5	No	Low	NA
-21	7	12	San Benedetto	8.5	No	Low	NA
-16	8	36	San Benedetto	8.5	No	Low	NA
-20	9	12	Levissima	6.5	Yes	Low	NA
-30	10	36	Levissima	6.5	Yes	Low	NA
-32	11	12	San Benedetto	6.5	Yes	Low	NA
-4	12	36	San Benedetto	6.5	Yes	Low	NA
-31	13	12	Levissima	8.5	Yes	Low	NA
-12	14	36	Levissima	8.5	Yes	Low	NA
-25	15	12	San Benedetto	8.5	Yes	Low	NA
-23	16	36	San Benedetto	8.5	Yes	Low	NA
-9	17	12	Levissima	6.5	No	High	NA
-15	18	36	Levissima	6.5	No	High	NA
-10	19	12	San Benedetto	6.5	No	High	NA
-7	20	36	San Benedetto	6.5	No	High	NA
-1	21	12	Levissima	8.5	No	High	NA
-11	22	36	Levissima	8.5	No	High	NA
-2	23	12	San Benedetto	8.5	No	High	NA
-17	24	36	San Benedetto	8.5	No	High	NA
-5	25	12	Levissima	6.5	Yes	High	NA
-18	26	36	Levissima	6.5	Yes	High	NA
-8	27	12	San Benedetto	6.5	Yes	High	NA
-27	28	36	San Benedetto	6.5	Yes	High	NA
-14	29	12	Levissima	8.5	Yes	High	NA
-3	30	36	Levissima	8.5	Yes	High	NA
-13	31	12	San Benedetto	8.5	Yes	High	NA
-24	32	36	San Benedetto	8.5	Yes	High	NA
+3	1	-	Levissima	-	-	-	NA
+15	2	+	Levissima	-	-	-	NA
+24	3	-	SanBenedetto	-	-	-	NA
+5	4	+	SanBenedetto	-	-	-	NA
+25	5	-	Levissima	+	-	-	NA
+31	6	+	Levissima	+	-	-	NA
+22	7	-	SanBenedetto	+	-	-	NA
+23	8	+	SanBenedetto	+	-	-	NA
+27	9	-	Levissima	-	+	-	NA
+6	10	+	Levissima	-	+	-	NA
+30	11	-	SanBenedetto	-	+	-	NA
+26	12	+	SanBenedetto	-	+	-	NA
+10	13	-	Levissima	+	+	-	NA
+4	14	+	Levissima	+	+	-	NA
+19	15	-	SanBenedetto	+	+	-	NA
+17	16	+	SanBenedetto	+	+	-	NA
+32	17	-	Levissima	-	-	+	NA
+8	18	+	Levissima	-	-	+	NA
+13	19	-	SanBenedetto	-	-	+	NA
+9	20	+	SanBenedetto	-	-	+	NA
+14	21	-	Levissima	+	-	+	NA
+12	22	+	Levissima	+	-	+	NA
+29	23	-	SanBenedetto	+	-	+	NA
+20	24	+	SanBenedetto	+	-	+	NA
+1	25	-	Levissima	-	+	+	NA
+2	26	+	Levissima	-	+	+	NA
+11	27	-	SanBenedetto	-	+	+	NA
+21	28	+	SanBenedetto	-	+	+	NA
+18	29	-	Levissima	+	+	+	NA
+16	30	+	Levissima	+	+	+	NA
+7	31	-	SanBenedetto	+	+	+	NA
+28	32	+	SanBenedetto	+	+	+	NA

@@ -3,7 +3,7 @@
 %========================================
 
 % === Impostazione del documento ==========================
-\documentclass[12pt,a4paper,twoside,english,italian,hidelinks]{book}
+\documentclass[12pt,a4paper,oneside,english,italian,hidelinks]{book}
 \pagenumbering{arabic}
 \usepackage{setspace}
 \onehalfspace

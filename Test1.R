@@ -43,28 +43,29 @@ source("PrepareFunction.R")
 #                       +----------> tempo (s)
 
 # define level
-lvl = c(-1, +1)
+lvl = c("-", "+")
 # define five factor
 factors = list(
-  WaterLvl = c(12,36),
-  WaterType = c("Levissima","San Benedetto"),
-  CoffeLoad = c(6.5,8.5),
-  Pressing = c("No", "Yes"),
-  Heat = c("Low", "High")
+  WaterLvl = lvl,
+  WaterType = c("Levissima","SanBenedetto"),
+  CoffeLoad = lvl,
+  Pressing = lvl,
+  Heat = lvl
 )
 
 # generate design matrix
 df <- prepare(factors, runorder = F, "DesignMatrix.dat")
 
+df <- read.table("DesignMatrix.dat", header = T)
 # preview of design matrix
-sink("NoResult.txt")
-print(df)
-sink()
+#sink("NoResult.txt")
+#print(df)
+#sink()
 
 # perform the experiment and store result in vector
-result <- runif(32, 1.5, 100.5)
+#result <- runif(32, 1.5, 100.5)
 #data <- df$Yield
-df$Yield <- result
+#df$Yield <- result
 # print preview 
 df
 #attach(df)
@@ -112,7 +113,7 @@ m <- data.frame(Temperature = c(15, 70, 125), Material = c("A", "B", "C"))
 k <- 4
 
 df <- prepare(m, k, "battery.dat", run = FALSE)
-df <- read.table("battery.dat", header = TRUE)
+df <- read.table("DesignMatrix-ResultWeight.dat", header = TRUE)
 df$Temperature <- as.factor(df$Temperature)
 df$Response <- 130
 attach(df)

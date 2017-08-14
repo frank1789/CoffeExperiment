@@ -48,6 +48,7 @@ qqline(effects,  datax = T, col = "dodgerblue")
 # modify the linear model
 df.lm2 <- lm(Yield ~ A*C*D + B * E , data = df)
 anova(df.lm2)
+shapiro.test(df.lm2$residuals)
 
 # MAC lm2
 qqnorm(df.lm2$residuals)
