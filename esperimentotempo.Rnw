@@ -1,6 +1,6 @@
 \chapter{Esperimento 2}
 In questa parte dell'eperimento si registra nella design matrix i valori del tempo assunti come resa del processo, si è inoltre assunto di misurare l'intero processo in modo da ridurre il peso dell'errore nella misura del tempo invece che registrare il solo tempo di estrazione.
-Una volta terminate la campagna di prove si riportano i risultati nel dataframe. 
+Una volta terminate le prove si riportano i risultati nel dataframe. 
 <<echo=F,results=hide>>=
 # Clean work space and screen options
 rm(list = ls())
@@ -17,7 +17,7 @@ library(MASS)
 <<>>=
 df <- read.table("DesignMatrix-ResultTime.dat", header = T)
 @
-Nell' importazione del dataframe come fatto in precedenza si codificano i fattori e i livelli con indetificativi convenzionali; inoltre si effetua una conversione della risposta “\emph{Yield}" dal formato [mm:ss] (minuti e secondi) in quantità numerica espressa in secondi [s] tramite la funzione:
+Nell' importazione del dataframe come fatto in precedenza si codificano i fattori e i livelli con indetificativi convenzionali; inoltre si effettua una conversione della risposta “\emph{Yield}" dal formato [mm:ss] (minuti e secondi) in quantità numerica espressa in secondi [s] tramite la funzione:
 <<>>=
 df$Yield <- as.numeric(as.period(ms(df$Yield), unit = "sec"))
 @
@@ -68,7 +68,7 @@ qqline(effects,  datax = T, col = "dodgerblue")
 \label{fig:QuantileEffectTime}
 \end{figure}
 \newpage
-\noindent Dalla figura \ref{fig:QuantileEffectTime} osserviamo che gli effetti più significativi, sono quelli che si discostano dalla retta, effetuando una prima scrematura.
+\noindent Dalla figura \ref{fig:QuantileEffectTime} osserviamo che gli effetti più significativi, sono quelli che si discostano dalla retta, effettuando una prima scrematura.
 Il modello viene modificato utilizzando la relazione $(Yield \sim A * B * D + C * E)$ quindi si ricava la tabella \textsc{anova} e se ne determina la significatività degli effetti.
 <<>>=
 df.lm2 <- lm(Yield ~ A * B * D + C * E, data = df)
@@ -81,7 +81,7 @@ La validità del modello avviene verificando la normalità dei residui e l'assen
 <<fig=T,echo=F,include=FALSE>>=
 qqnorm(df.lm2$residuals, datax = T)
 qqline(df.lm2$residuals, datax = T, col = "red")
-plot(df.lm2$fit, df.lm2$res, xlab = "Fitted values", ylab = "Residuals")
+plot(df.lm2$fit, df.lm2$res, xlab = "Fitted values", ylab = "Residuals", main = "Fitted values pattern")
 hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
 plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
      main="Run Order Plot")
@@ -93,7 +93,7 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 \label{fig:lm2Time}
 \end{figure}
 %
-\newline \noindent Si osserva, in figura \ref{fig:lm2Time}, una distribuzione normale nell'istrogramma e l'assenza di pattern nel "Fitted value Pattern". Dato un basso valore \emph{p-value} nelle interazioni A:B, A:D, B:D, C:E, si modifica di conseguenza il modello, impostando una relazione in cui non viene considerata la possibilità di interazione tra i fattori, assumendo $(Yield \sim A + C + E)$ si ottine:
+\newline \noindent Si osserva, in figura \ref{fig:lm2Time}, una distribuzione normale nell'istrogramma e l'assenza di pattern nel "Fitted value Pattern". Dato un basso valore \emph{p-value} nelle interazioni A:B, A:D, B:D, C:E, si modifica di conseguenza il modello, impostando una relazione in cui non viene considerata la possibilità di interazione tra i fattori, assumendo $(Yield \sim A + C + E)$ si ottiene:
 <<>>=
 df.lm3 <- lm(Yield ~ A + C + E, data = df)
 anova(df.lm3)
@@ -110,7 +110,7 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 @
 \begin{figure}[h] 
 \centering
- \includegraphics[width=0.70\textwidth]{Report-030}
+ \includegraphics[width=0.70\textwidth]{Report-029}
 \caption{modello lineare $(Yield \sim A + C + E)$, analisi dei residui}
 \label{fig:MACTime3}
 \end{figure}

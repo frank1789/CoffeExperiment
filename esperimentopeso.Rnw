@@ -1,6 +1,6 @@
 \chapter{Esperimento 1}
-Attraverso l'uso di R si è realizzata la matrice degli esperimenti, \emph{Design Matrix}, nella quale si realizzano le combinazioni dei fattori prima descritti e i relativi livelli. Dopo aver realizzato la matrice degli esperimenti come visto in precedenza. Sono stati realizzate le prove.
-In quanto si sono realizzate più prove in successione si è preferito eseguire l'esperimeto secondo il \emph{RunOrder} generato casualmenete, successivamente sono stati registrati i risultati nel dataframe.
+Attraverso l'uso di R si è realizzata la matrice degli esperimenti, \emph{Design Matrix}, nella quale si realizzano le combinazioni dei fattori prima descritti e i relativi livelli, dopo aver realizzato la matrice degli esperimenti come visto in precedenza, sono state realizzate le prove.
+In quanto si sono realizzate più prove in successione si è preferito eseguire l'esperimeto secondo il \emph{RunOrder} generato casualmente, poi sono stati registrati i risultati nel dataframe.
 <<echo=F,results=hide>>=
 # Clean work space and screen options
 rm(list = ls())
@@ -17,7 +17,7 @@ library(MASS)
 <<>>=
 df <- read.table("DesignMatrix-ResultWeight.dat", header = T)
 @
-\noindent Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni con delle label codificate da lettere maiuscole per indentificare i fattori e si sostiutisocno i valori con i segni “-"  e “+" per identificare i livelli.
+\noindent Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni con delle \emph{label} codificate da lettere maiuscole per indentificare i fattori e si sostituiscono i valori con i segni “-"  e “+" per identificare i livelli.
 <<echo=FALSE>>=
   df$WaterType <-
     factor(
@@ -42,12 +42,12 @@ df <- read.table("DesignMatrix-ResultWeight.dat", header = T)
 <<>>=
   df
 @
-\noindent Si procede quindi all'anlisi del piano fattoriale mediante un modello lineare completo secondo $(Yield \sim A*B*C*D*E)$:
+\noindent Si procede quindi all'analisi del piano fattoriale mediante un modello lineare completo secondo $(Yield \sim A*B*C*D*E)$:
 <<results=>>=
 df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
 anova(df.lm)
 @
-\noindent Si osserva nella tabella \textsc{anova} il valore dei residui è pari a zero, dato che il piano non è replicato si applica il metodo di Daniel; dove si esamina il diagramma di probabilità normale per gli effetti calcolati secondo il modello lineare, prima visto $(Yield \sim A * B * C * D * E)$, si ricava il vettore degli effetti meno l'intercetta:
+\noindent Si osserva nella tabella \textsc{anova} il valore dei residui che è pari a zero, dato che il piano non è replicato si applica il metodo di Daniel; dove si esamina il diagramma di probabilità normale per gli effetti calcolati secondo il modello lineare, prima visto $(Yield \sim A * B * C * D * E)$, si ricava il vettore degli effetti meno l'intercetta:
 <<echo=TRUE,fig=FALSE,include=FALSE>>=
 effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
 qn      <- qqnorm(effects,
@@ -63,7 +63,7 @@ qqline(effects,  datax = T, col = "dodgerblue")
 \caption{da inserire}
 \label{fig:EffectsQuantile1}
 \end{figure}
-\noindent Modifichiamo il modello lineare escludendo gli effetti che non sono significativi, cioè risentono solo dell'errore sperimentale e sono quindi distribuiti lungo la retta normale, visti in figua \ref{fig:EffectsQuantile1}. Il nuovo modello lineare assume la relazione ($Yield \sim A * C * D + B * E$), si ricalcola la tabella \textsc{anova} quindi si procede alla verifica adeguatezza verificando normalità dei residui e assenza di pattern.
+\noindent Modifichiamo il modello lineare escludendo gli effetti che non sono significativi, cioè risentono solo dell'errore sperimentale e sono quindi distribuiti lungo la retta normale, visti in figua \ref{fig:EffectsQuantile1}. Il nuovo modello lineare assume la relazione ($Yield \sim A * C * D + B * E$), si ricalcola la tabella \textsc{anova} quindi si procede verificando normalità dei residui e assenza di pattern.
 <<result=>>=
 df.lm2 <- lm(Yield ~ A * C * D + B * E, data = df)
 anova(df.lm2)
@@ -131,7 +131,7 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 \newline
 L'ultima relazione analizzata mostra una distribuzione normale dei residui e l'istogramma dei residui non indica gravi violazioni delle ipotesi del modello. La sequenza di esecuzione dei residui non indica  dipendenze temporali.
 %
-Si esplora le iteazioni tra i fattori e i livelli
+Si esplorano le inteazioni tra i fattori e i livelli
 \begin{figure}[htb] \centering
 <<fig=T, echo=F>>=
 interaction.plot(df$A,df$B,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "WaterType" )
