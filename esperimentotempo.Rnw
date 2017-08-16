@@ -63,7 +63,7 @@ qqline(effects,  datax = T, col = "dodgerblue")
 @
 \begin{figure}[htb]
 \centering
-  \includegraphics[width=0.80\textwidth]{Report-025}
+  \includegraphics[width=0.80\textwidth]{Report-027}
 \caption{da inserire}
 \label{fig:QuantileEffectTime}
 \end{figure}
@@ -88,7 +88,7 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 @
 \begin{figure}[h]
 \centering
-  \includegraphics[width=0.80\textwidth]{Report-028}
+  \includegraphics[width=0.80\textwidth]{Report-029}
 \caption{modello lineare $(Yield \sim A * B * D + C * E)$, analisi dei residui}
 \label{fig:lm2Time}
 \end{figure}
@@ -115,26 +115,43 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 \label{fig:MACTime3}
 \end{figure}
 \newline \noindent Si nota che il grafico “Fitted value Patterns", in figura \ref{fig:MACTime3}, mostra un andamento oscillante dei residui, il quale permette di rigettare il nuovo modello, mantenedo quello completo di interazione.
-Si esplora le iteazioni tra i fattori e i livelli
-\begin{figure}[htb] \centering
-<<fig=T, echo=F>>=
+Per comprendere meglio la bontà del modello realizzato e verificare le interazioni tra i fattori e come incidano sulla durata dell'estrazione del caffè, si generano i seguenti grafici di interazione [\ref{fig:subfig2}].
+<<echo=F,fig=T,include=FALSE>>=
 interaction.plot(df$A,df$B,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "WaterType" )
 interaction.plot(df$A,df$C,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "CoffeLoad")
 interaction.plot(df$A,df$D,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "Pressing")
 interaction.plot(df$A,df$E,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "Heat")
 @
-\end{figure}
-\begin{figure}[htb] \centering
-<<fig=T, echo=F>>=
+%
+<<echo=F,fig=T,include=FALSE>>=
 interaction.plot(df$B,df$C,df$Yield, xlab = "WaterType", ylab = "Yield", trace.label = "CoffeLoad")
 interaction.plot(df$B,df$D,df$Yield, xlab = "WaterType", ylab = "Yield", trace.label = "Pressing")
 interaction.plot(df$B,df$E,df$Yield, xlab = "WaterType", ylab = "Yield", trace.label = "Heat")
 interaction.plot(df$C,df$D,df$Yield, xlab = "CoffeLoad", ylab = "Yield", trace.label = "Pressing")
 @
-\end{figure}
-\begin{figure}[htb] \centering
-<<fig=T, echo=F>>=
+<<echo=F,fig=T,include=FALSE>>=
 interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Yield", trace.label = "Heat")
 interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Yield", trace.label = "Heat")
 @
+\begin{figure}[htb]
+\centering
+\subfloat[][\emph{Interazione fattore A vs altri}.\label{fig:subfig4}]
+   {\includegraphics[width=.80\textwidth]{Report-030}} \,
 \end{figure}
+\begin{figure}[!h]\ContinuedFloat
+\centering
+\subfloat[][\emph{Interazione fattore B e C vs altri}.\label{fig:subfig5}]
+   {\includegraphics[width=.65\textwidth]{Report-031}} \,
+\subfloat[][\emph{Interazione fattore C e D vs altri}.\label{fig:subfig6}]
+   {\includegraphics[width=.65\textwidth]{Report-032mod}}
+\caption{Grafici delle interazioni tra fattori.}
+\label{fig:subfig2}
+\end{figure}
+\newpage
+Dai grafici, nelle figure \ref{fig:subfig2}, derivano le seguenti osservazioni:
+\begin{itemize}
+\item L'effetto di A è elevato, ma presenta scarse interazioni con gli altri fattori; tranne che con il fattore D dove si verifica un'interazione.
+\item L'effetto di B, è elevato nella maggior parte delle interazioni presentando invece un forte interazione unicamente con il fattore D al contrario di quanto è avveniva nell'esperimento precedente.
+\item Il fattori C presenta una forte interazione con il fattore D, mentre negli altri casi presenta solo un effetto elevato, cosi come accadave in precedenza.
+\end{itemize}
+\chapter{Conclusione}

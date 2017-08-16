@@ -63,6 +63,9 @@ qqline(df.lm2$residuals, datax = T, col = "red")
 plot(df.lm2$fitted.values, df.lm2$residuals, ylab = "Residuals" , xlab = "Fitted values",
      main = "Fitted values pattern")
 hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
+plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
+     main="Run Order Plot")
+boxplot(df.lm2$residuals, horizontal = T)
 
 # linear model 3 - without interaction
 df.lm3 <- lm(Yield ~ A + C + E, data = df)
@@ -74,18 +77,34 @@ qqline(df.lm3$residuals, datax = T, col = "red")
 plot( df.lm3$fitted.values, df.lm3$residuals, ylab = "Residuals" , xlab = "Fitted values",
       main = "Fitted values pattern")
 hist(df.lm3$residuals, xlab = "Residuals", main = "Histogram of residuals")
+plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
+     main="Run Order Plot")
+boxplot(df.lm3$residuals, horizontal = T)
 
 # inteaction plot
-interaction.plot(df$A,df$B,df$Yield, xlab = "WaterLevel", ylab = "WaterType")
-interaction.plot(df$A,df$C,df$Yield, xlab = "WaterLevel", ylab = "Coffeload")
-interaction.plot(df$A,df$D,df$Yield, xlab = "WaterLevel", ylab = "Pressing")
-interaction.plot(df$A,df$E,df$Yield, xlab = "WaterLevel", ylab = "Heat")
-interaction.plot(df$B,df$C,df$Yield, xlab = "WaterType", ylab = "CoffeLoad")
-interaction.plot(df$B,df$D,df$Yield, xlab = "WaterType", ylab = "Pressing")
-interaction.plot(df$B,df$E,df$Yield, xlab = "WaterType", ylab = "Heat")
-interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Heat")
-interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Heat")
+interaction.plot(df$A,df$B,df$Yield, xlab = "WaterLevel", ylab = "Yield")
+interaction.plot(df$A,df$C,df$Yield, xlab = "WaterLevel", ylab = "Yield")
+interaction.plot(df$A,df$D,df$Yield, xlab = "WaterLevel", ylab = "Yield")
+interaction.plot(df$A,df$E,df$Yield, xlab = "WaterLevel", ylab = "Yield")
+interaction.plot(df$B,df$C,df$Yield, xlab = "WaterType", ylab = "Yield")
+interaction.plot(df$B,df$D,df$Yield, xlab = "WaterType", ylab = "Yield")
+interaction.plot(df$B,df$E,df$Yield, xlab = "WaterType", ylab = "Yield")
+interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Yield")
+interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Yield", trace.label = "Heat", col = 3:1, legend = T)
 
 shapiro.test(df.lm2$residuals)
 shapiro.test(df.lm3$residuals)
+
+bc = boxcox(df.lm2, data = df)
+title("Box-Cox Transformation")
+lambda = bc$x[which.max(bc$y)]
+lambda
+boxcox(df.lm2,plotit=T,data= df)
+#boxcox(df.lm2,lambda=seq(0.0,1.0,by=0.05),plotit=T,data = df)
+abline(v=c(lambda), col = "green")
+
+bc = boxcox(df.lm3, data = df)
+title("Box-Cox Transformation")
+lambda = bc$x[which.max(bc$y)]
+lambda
 

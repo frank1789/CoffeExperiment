@@ -131,26 +131,42 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 \newline
 L'ultima relazione analizzata mostra una distribuzione normale dei residui e l'istogramma dei residui non indica gravi violazioni delle ipotesi del modello. La sequenza di esecuzione dei residui non indica  dipendenze temporali.
 %
-Si esplorano le inteazioni tra i fattori e i livelli
-\begin{figure}[htb] \centering
-<<fig=T, echo=F>>=
+Per avere una visualizzazione migliore di come incidano i fattori sul quantità di caffè fuoriuscita, si utilizzano i grafici di interazione degli effetti [\ref{fig:subfig}]. 
+%
+<<echo=F,fig=T,include=FALSE>>=
 interaction.plot(df$A,df$B,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "WaterType" )
 interaction.plot(df$A,df$C,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "CoffeLoad")
 interaction.plot(df$A,df$D,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "Pressing")
 interaction.plot(df$A,df$E,df$Yield, xlab = "WaterLevel", ylab = "Yield", trace.label = "Heat")
 @
-\end{figure}
-\begin{figure}[htb] \centering
-<<fig=T, echo=F>>=
+%
+<<echo=F,fig=T,include=FALSE>>=
 interaction.plot(df$B,df$C,df$Yield, xlab = "WaterType", ylab = "Yield", trace.label = "CoffeLoad")
 interaction.plot(df$B,df$D,df$Yield, xlab = "WaterType", ylab = "Yield", trace.label = "Pressing")
 interaction.plot(df$B,df$E,df$Yield, xlab = "WaterType", ylab = "Yield", trace.label = "Heat")
 interaction.plot(df$C,df$D,df$Yield, xlab = "CoffeLoad", ylab = "Yield", trace.label = "Pressing")
 @
-\end{figure}
-\begin{figure}[htb] \centering
-<<fig=T, echo=F>>=
+<<echo=F,fig=T,include=FALSE>>=
 interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Yield", trace.label = "Heat")
 interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Yield", trace.label = "Heat")
 @
+\begin{figure}
+\centering
+\subfloat[][\emph{Interazione fattore A vs altri}.]
+   {\includegraphics[width=.65\textwidth]{Report-015}} \,
+\subfloat[][\emph{Interazione fattore B e C vs altri}.]
+   {\includegraphics[width=.65\textwidth]{Report-016}} \\
 \end{figure}
+\begin{figure}[htb]\ContinuedFloat
+\centering
+\subfloat[][\emph{Interazione fattore C e D vs altri}.]
+   {\includegraphics[width=.65\textwidth]{Report-017mod}}
+\caption{Grafici delle interazioni tra fattori.}
+\label{fig:subfig}
+\end{figure}
+\newpage Dai grafici si osserva:
+\begin{itemize}
+\item L'effetto di A, quantità di acqua (WaterLevel), è elevato, ma presenta scarse interazioni con gli altri fattori.
+\item L'effetto di B, tipo di acqua (WaterType), è elevato nella maggior parte delle interazioni presentando invece un forte interazione con il fattore D ed E, pressatura (Pressing) e fiamma (Heat) ripsettivamente.
+\item L'effeto dei fattori C e D presentano un'elevata interazione; al contrario dimostrano scarsa interazione ed efetto elevato se confrontati con i fattori E e D.
+\end{itemize}
