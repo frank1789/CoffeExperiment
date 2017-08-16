@@ -46,8 +46,7 @@ Quindi si verifica il risultato ottenuto:
 <<>>=
 df
 @
-Definendo un modello lineare espresso dalla seguente relazione $(Yield \sim A*B*C*D*E)$ si ottiene come osservato per l'esperimento precedente che i residui sono nulli, per l'ipotesi già osservate di piano fattoriale completo e assenza di replicazioni è necessario utilizzare il metodo di Daniel per individuare l'effeto dei fattori, %
-quindi applicando il metodo di Daniel  si osserva il grafico quantile--quantile per il modello lineare completo:
+Definendo un modello lineare espresso dalla seguente relazione $(Yield \sim A*B*C*D*E)$ si ottiene come osservato per l'esperimento precedente che i residui sono nulli, per l'ipotesi già osservate di piano fattoriale completo e assenza di replicazioni è necessario individuare l'effeto dei fattori, quindi, applicando il metodo di Daniel  si osserva il grafico quantile--quantile per il modello lineare completo:
 <<echo=F,results=hide>>=
 options(SweaveHooks = list(fig = function() par(mfrow=c(1,1)))) 
 df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
@@ -70,7 +69,7 @@ qqline(effects,  datax = T, col = "dodgerblue")
 \end{figure}
 \newpage
 \noindent Dalla figura \ref{fig:QuantileEffectTime} osserviamo che gli effetti più significativi, sono quelli che si discostano dalla retta, effetuando una prima scrematura.
-Il modello viene modificato utilizzando la relazione $(Yield \sim A * B * D + C * E)$ quindi si ricava la tabella \textsc{anova} e se ne determina la significatività degli effetti:
+Il modello viene modificato utilizzando la relazione $(Yield \sim A * B * D + C * E)$ quindi si ricava la tabella \textsc{anova} e se ne determina la significatività degli effetti.
 <<>>=
 df.lm2 <- lm(Yield ~ A * B * D + C * E, data = df)
 anova(df.lm2)
@@ -94,7 +93,7 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 \label{fig:lm2Time}
 \end{figure}
 %
-\newline \noindent Si osserva, in figura \ref{fig:lm2Time}, una distribuzione normale nell'istrogramma e l'assenza di pattern nel "Fitted value Pattern". Dato un basso valore \emph{p-value} nelle interazioni A:B, A:D, B:D, C:E, si modifica di conseguenza il modello, impostando una relazione in cui non viene considerata la possitbilità di interazione tra i fattori, assumendo $(Yield \sim A + C + E)$ si ottine:
+\newline \noindent Si osserva, in figura \ref{fig:lm2Time}, una distribuzione normale nell'istrogramma e l'assenza di pattern nel "Fitted value Pattern". Dato un basso valore \emph{p-value} nelle interazioni A:B, A:D, B:D, C:E, si modifica di conseguenza il modello, impostando una relazione in cui non viene considerata la possibilità di interazione tra i fattori, assumendo $(Yield \sim A + C + E)$ si ottine:
 <<>>=
 df.lm3 <- lm(Yield ~ A + C + E, data = df)
 anova(df.lm3)

@@ -1,5 +1,5 @@
 \chapter{Analisi}
-Attraverso l'uso di R si è realizzata la matrice degli esperimenti, \emph{Design Matrix}, nella quale si realizzano le combinazioni dei fattori prima descritti e i reltivi livelli. Dopo aver realizzato la matrice degli esperimenti come visto in precedenza. Sono stati realizzate le prove.
+Attraverso l'uso di R si è realizzata la matrice degli esperimenti, \emph{Design Matrix}, nella quale si realizzano le combinazioni dei fattori prima descritti e i relativi livelli. Dopo aver realizzato la matrice degli esperimenti come visto in precedenza. Sono stati realizzate le prove.
 In quanto si sono realizzate più prove in successione si è preferito eseguire l'esperimeto secondo il \emph{RunOrder} generato casualmenete, successivamente sono stati registrati i risultati nel dataframe.
 <<echo=F,results=hide>>=
 # Clean work space and screen options
@@ -17,7 +17,7 @@ library(MASS)
 <<>>=
 df <- read.table("DesignMatrix-ResultWeight.dat", header = T)
 @
-\noindent Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni con delle label codificate da lettere maiuscole per indentificare i fattori e si sostiutisocno i valori con i segni "-"  e "+" per identificare i livelli.
+\noindent Si importa il dataframe e si sostituiscono i valori numerici e le descrizioni con delle label codificate da lettere maiuscole per indentificare i fattori e si sostiutisocno i valori con i segni “-"  e “+" per identificare i livelli.
 <<echo=FALSE>>=
   df$WaterType <-
     factor(
@@ -87,7 +87,7 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 \label{fig:qunatilePlotResidual}
 \end{figure}
 %
-\newpage \noindent In figura \ref{fig:qunatilePlotResidual} nessuno dei diagrammi sembra mostrare una distribuzione normale dei residui tipica e il boxplot \ref{fig:boxplotpeso} indica che potrebbero esserci outliers.
+\newpage \noindent In figura \ref{fig:qunatilePlotResidual} nessuno dei diagrammi sembra mostrare una tipica distribuzione normale dei residui e il boxplot \ref{fig:boxplotpeso} indica che potrebbero esserci outliers.
 <<echo=F,results=hide,fig=F>>=
 options(SweaveHooks = list(fig = function() par(mfrow=c(1,1))))
 boxplot(df.lm2$residuals, horizontal = T)
@@ -99,7 +99,7 @@ boxplot(df.lm2$residuals, horizontal = T)
 \label{fig:boxplotpeso}
 \end{figure}
 %
-\noindent Si osserva un elevato valore del \emph{p-value}, per i fattori , data la loro bassa significatività si assume una relazione ($Yield \sim A * C + B * E$) ricalcolando \textsc{anova}:
+\newline\noindent Si osserva un elevato valore del \emph{p-value}, per i fattori , data la loro bassa significatività si assume una relazione ($Yield \sim A * C + B * E$) ricalcolando \textsc{anova}:
 <<>>=
 df.lm3 <- lm(Yield ~ A * C + B * E, data = df)
 anova(df.lm3)
@@ -126,6 +126,11 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 %
 \newline
 L'ultima relazione analizzata mostra una distribuzione normale dei residui e l'istogramma dei residui non indica gravi violazioni delle ipotesi del modello. La sequenza di esecuzione dei residui non indica  dipendenze temporali.
+Come verifica finale si utilizza anche il test di Shapiro, che conferma le conclusioni ottenute con
+una probabilità di errore di tipo I pari al $5\,\%$.
+<<>>=
+shapiro.test(df.lm3$residuals)
+@
 \subsection{Effetti principali e interazioni}
 Si esplora le iteazioni tra i fattori e i livelli
 \begin{figure}[htb] \centering
