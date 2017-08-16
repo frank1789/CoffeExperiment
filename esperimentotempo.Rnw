@@ -1,5 +1,5 @@
-\chapter{Esperimento Tempo}
-In questa parte dell'eperimento si registra nella design matrix i valori del tempo assunti come resa del processo, si è inoltre assunto di misurare l'intero processo in modo da ridurre il peso dell'errore nella misura del tempo invece che regstrare il tempo di estrazione.
+\chapter{Esperimento 2}
+In questa parte dell'eperimento si registra nella design matrix i valori del tempo assunti come resa del processo, si è inoltre assunto di misurare l'intero processo in modo da ridurre il peso dell'errore nella misura del tempo invece che registrare il solo tempo di estrazione.
 Una volta terminate la campagna di prove si riportano i risultati nel dataframe. 
 <<echo=F,results=hide>>=
 # Clean work space and screen options

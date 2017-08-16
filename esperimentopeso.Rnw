@@ -1,4 +1,4 @@
-\chapter{Analisi}
+\chapter{Esperimento 1}
 Attraverso l'uso di R si è realizzata la matrice degli esperimenti, \emph{Design Matrix}, nella quale si realizzano le combinazioni dei fattori prima descritti e i relativi livelli. Dopo aver realizzato la matrice degli esperimenti come visto in precedenza. Sono stati realizzate le prove.
 In quanto si sono realizzate più prove in successione si è preferito eseguire l'esperimeto secondo il \emph{RunOrder} generato casualmenete, successivamente sono stati registrati i risultati nel dataframe.
 <<echo=F,results=hide>>=
@@ -103,7 +103,7 @@ boxplot(df.lm2$residuals, horizontal = T)
 \label{fig:boxplotpeso}
 \end{figure}
 %
-\newline\noindent Si osserva un elevato valore del \emph{p-value}, per i fattori , data la loro bassa significatività si assume una relazione ($Yield \sim A * C + B * E$) ricalcolando \textsc{anova}:
+\newline\noindent Si osserva un elevato valore del \emph{p-value}, per i fattori D e le relative interazioni, data la loro bassa significatività si assume una relazione ($Yield \sim A * C + B * E$) ricalcolando \textsc{anova}:
 <<>>=
 df.lm3 <- lm(Yield ~ A * C + B * E, data = df)
 anova(df.lm3)
@@ -130,12 +130,7 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 %
 \newline
 L'ultima relazione analizzata mostra una distribuzione normale dei residui e l'istogramma dei residui non indica gravi violazioni delle ipotesi del modello. La sequenza di esecuzione dei residui non indica  dipendenze temporali.
-Come verifica finale si utilizza anche il test di Shapiro, che conferma le conclusioni ottenute con
-una probabilità di errore di tipo I pari al $5\,\%$.
-<<>>=
-shapiro.test(df.lm3$residuals)
-@
-\subsection{Effetti principali e interazioni}
+%
 Si esplora le iteazioni tra i fattori e i livelli
 \begin{figure}[htb] \centering
 <<fig=T, echo=F>>=
