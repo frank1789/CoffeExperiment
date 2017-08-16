@@ -48,7 +48,7 @@ df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
 anova(df.lm)
 @
 \noindent Si osserva nella tabella \textsc{anova} il valore dei residui è pari a zero, dato che il piano non è replicato si applica il metodo di Daniel; dove si esamina il diagramma di probabilità normale per gli effetti calcolati secondo il modello lineare, prima visto $(Yield \sim A * B * C * D * E)$, si ricava il vettore degli effetti meno l'intercetta:
-<<echo=TRUE,fig=FALSE>>=
+<<echo=TRUE,fig=FALSE,include=FALSE>>=
 effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
 qn      <- qqnorm(effects,
                   datax = T, 
@@ -87,14 +87,18 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 \label{fig:qunatilePlotResidual}
 \end{figure}
 %
-\newpage \noindent In figura \ref{fig:qunatilePlotResidual} nessuno dei diagrammi sembra mostrare una tipica distribuzione normale dei residui e il boxplot \ref{fig:boxplotpeso} indica che potrebbero esserci outliers.
-<<echo=F,results=hide,fig=F>>=
+\newpage \noindent In figura \ref{fig:qunatilePlotResidual} nessuno dei diagrammi sembra mostrare una tipica distribuzione normale dei residui e il boxplot, in figura \ref{fig:boxplotpeso}, indica possibili outliers.
+<<echo=F,results=hide>>=
 options(SweaveHooks = list(fig = function() par(mfrow=c(1,1))))
+@
+%
+%
+<<echo=F, fig=T,include=FALSE>>=
 boxplot(df.lm2$residuals, horizontal = T)
 @
 \begin{figure}[htb]
 \centering
-  \includegraphics[width=0.80\textwidth]{Report-013}
+  \includegraphics[width=0.60\textwidth]{Report-011}
 \caption{Boxplot, analisi dei residui}
 \label{fig:boxplotpeso}
 \end{figure}

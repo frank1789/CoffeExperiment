@@ -1,5 +1,5 @@
 \chapter{Esperimento Tempo}
-In questa parte dell'eperimento si registra nella designmatrix i valori del tempo assunti come resa del processo, si è inoltre assunto di misurare l'intero processo in modo da ridurre il peso dell'errore nella misura del tempo invece che regstrare il tempo di estrazione.
+In questa parte dell'eperimento si registra nella design matrix i valori del tempo assunti come resa del processo, si è inoltre assunto di misurare l'intero processo in modo da ridurre il peso dell'errore nella misura del tempo invece che regstrare il tempo di estrazione.
 Una volta terminate la campagna di prove si riportano i risultati nel dataframe. 
 <<echo=F,results=hide>>=
 # Clean work space and screen options
@@ -52,7 +52,7 @@ options(SweaveHooks = list(fig = function() par(mfrow=c(1,1))))
 df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
 anova(df.lm)
 @
-<<echo=TRUE,fig=FALSE>>=
+<<echo=TRUE,fig=T,include=FALSE>>=
 effects <- as.vector(df.lm$effects)[2:length(df.lm$effects)]
 qn      <- qqnorm(effects,
                   datax = T, 
@@ -63,7 +63,7 @@ qqline(effects,  datax = T, col = "dodgerblue")
 @
 \begin{figure}[htb]
 \centering
-  \includegraphics[width=0.80\textwidth]{Report-024}
+  \includegraphics[width=0.80\textwidth]{Report-025}
 \caption{da inserire}
 \label{fig:QuantileEffectTime}
 \end{figure}
@@ -78,7 +78,7 @@ anova(df.lm2)
 options(SweaveHooks = list(fig = function() par(mfrow=c(2,2)))) 
 @
 La validità del modello avviene verificando la normalità dei residui e l'assenza di pattern:
-<<fig=F,echo=F>>=
+<<fig=T,echo=F,include=FALSE>>=
 qqnorm(df.lm2$residuals, datax = T)
 qqline(df.lm2$residuals, datax = T, col = "red")
 plot(df.lm2$fit, df.lm2$res, xlab = "Fitted values", ylab = "Residuals")
@@ -88,7 +88,7 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 @
 \begin{figure}[h]
 \centering
-  \includegraphics[width=0.70\textwidth]{Report-027}
+  \includegraphics[width=0.80\textwidth]{Report-028}
 \caption{modello lineare $(Yield \sim A * B * D + C * E)$, analisi dei residui}
 \label{fig:lm2Time}
 \end{figure}
@@ -99,9 +99,7 @@ df.lm3 <- lm(Yield ~ A + C + E, data = df)
 anova(df.lm3)
 @
 Si verifica l'adeguatezza del modello:
-\begin{figure}[htb] 
-\centering
-<<fig=TRUE, echo=FALSE>>=
+<<fig=TRUE, echo=FALSE, include=FALSE>>=
 qqnorm(df.lm3$residuals, datax = T, main = "QQ-plot residuals")
 qqline(df.lm3$residuals, datax = T, col = "red")
 plot( df.lm3$fitted.values, df.lm3$residuals, ylab = "Residuals" , xlab = "Fitted values",
@@ -110,6 +108,9 @@ hist(df.lm3$residuals, xlab = "Residuals", main = "Histogram of residuals")
 plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
      main="Run Order Plot")
 @
+\begin{figure}[h] 
+\centering
+ \includegraphics[width=0.70\textwidth]{Report-030}
 \caption{modello lineare $(Yield \sim A + C + E)$, analisi dei residui}
 \label{fig:MACTime3}
 \end{figure}
