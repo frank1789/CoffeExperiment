@@ -59,9 +59,9 @@ qqline(effects,  datax = T, col = "dodgerblue")
 @
 \begin{figure}[htb]
 \centering
-  \includegraphics[width=0.80\textwidth]{Rplots}
-\caption{da inserire}
-\label{fig:EffectsQuantile1}
+  \includegraphics[width=0.70\textwidth]{Rplots}
+  \caption{Analisi degli effetti secondo il metodo di Daniel}
+  \label{fig:EffectsQuantile1}
 \end{figure}
 \noindent Modifichiamo il modello lineare escludendo gli effetti che non sono significativi, cioè risentono solo dell'errore sperimentale e sono quindi distribuiti lungo la retta normale, visti in figua \ref{fig:EffectsQuantile1}. Il nuovo modello lineare assume la relazione ($Yield \sim A * C * D + B * E$), si ricalcola la tabella \textsc{anova} quindi si procede verificando normalità dei residui e assenza di pattern.
 <<result=>>=
@@ -73,7 +73,7 @@ options(SweaveHooks = list(fig = function() par(mfrow=c(2,2))))
 @
 Si effettua la verifica dell'adeguatezza del modello:
 \begin{figure}[htb]
-\centering
+  \centering
 <<fig=T,echo=F>>=
 qqnorm(df.lm2$res, datax = T, main = "QQ-plot residuals")
 qqline(df.lm2$res, datax = T, col = "red")
@@ -83,11 +83,10 @@ hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
 plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
      main="Run Order Plot")
 @
-\caption{Modello lineare ($Yield \sim A * C * D + B * E$), analisi dei residui}
-\label{fig:qunatilePlotResidual}
+  \caption{Modello lineare ($Yield \sim A * C * D + B * E$), analisi dei residui}
+  \label{fig:qunatilePlotResidual}
 \end{figure}
-%
-\newpage \noindent In figura \ref{fig:qunatilePlotResidual} nessuno dei diagrammi sembra mostrare una tipica distribuzione normale dei residui e il boxplot, in figura \ref{fig:boxplotpeso}, indica possibili outliers.
+\newline \noindent In figura \ref{fig:qunatilePlotResidual} nessuno dei diagrammi sembra mostrare una tipica distribuzione normale dei residui e il boxplot, in figura \ref{fig:boxplotpeso}, indica possibili outliers.
 <<echo=F,results=hide>>=
 options(SweaveHooks = list(fig = function() par(mfrow=c(1,1))))
 @
@@ -103,7 +102,13 @@ boxplot(df.lm2$residuals, horizontal = T)
 \label{fig:boxplotpeso}
 \end{figure}
 %
-\newline\noindent Si osserva un elevato valore del \emph{p-value}, per i fattori D e le relative interazioni, data la loro bassa significatività si assume una relazione ($Yield \sim A * C + B * E$) ricalcolando \textsc{anova}:
+\newline\noindent Ai fini dell’interpretazione, l’ipotesi nulla è che le varianze sono uguali fra di loro, e che dunque la variabile indipendente: \textbf{D, A:D, C:D, A:C:D}; non produca effetti sulla variabile dipendente. La probabilità che sia vera l’ipotesi nulla è indicata dal valore Pr (\emph{p-value}). Nel caso analizzato, la relazione non è significativa:
+\begin{itemize}
+\item D (0,41939) = 41,93\%;
+\item A:D (0,83515) = 83,51\%;
+\end{itemize}
+ed anzi le due variabili sono quasi perfettamente indipendenti, in quanto Pr = 0,83515: c’è il 83,51\% di probabilità che sia vera l’ipotesi nulla.
+\\Si assume una relazione ($Yield \sim A * C + B * E$) ricalcolando \textsc{anova}:
 <<>>=
 df.lm3 <- lm(Yield ~ A * C + B * E, data = df)
 anova(df.lm3)
@@ -129,8 +134,8 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 \end{figure}
 %
 \newline
-L'ultima relazione analizzata mostra una distribuzione normale dei residui e l'istogramma dei residui non indica gravi violazioni delle ipotesi del modello. La sequenza di esecuzione dei residui non indica  dipendenze temporali.
-%
+L'ultima relazione analizzata mostra una distribuzione normale dei residui e l'istogramma dei residui non indica gravi violazioni delle ipotesi del modello. La sequenza di esecuzione dei residui non indica dipendenze temporali.
+\\
 Per avere una visualizzazione migliore di come incidano i fattori sul quantità di caffè fuoriuscita, si utilizzano i grafici di interazione degli effetti [\ref{fig:subfig}]. 
 %
 <<echo=F,fig=T,include=FALSE>>=
@@ -150,21 +155,20 @@ interaction.plot(df$C,df$D,df$Yield, xlab = "CoffeLoad", ylab = "Yield", trace.l
 interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Yield", trace.label = "Heat")
 interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Yield", trace.label = "Heat")
 @
-\begin{figure}
-\centering
-\subfloat[][\emph{Interazione fattore A vs altri}.]
-   {\includegraphics[width=.65\textwidth]{Report-015}} \,
-\subfloat[][\emph{Interazione fattore B e C vs altri}.]
-   {\includegraphics[width=.65\textwidth]{Report-016}} \\
+\newpage
+\begin{figure}[h]
+  \centering
+  \subfloat[][\emph{Interazione fattore A vs altri}.]{\includegraphics[width=.65\textwidth]{Report-015}} \,
+  \subfloat[][\emph{Interazione fattore B e C vs altri}.]{\includegraphics[width=.65\textwidth]{Report-016}}\\
 \end{figure}
-\begin{figure}[htb]\ContinuedFloat
-\centering
-\subfloat[][\emph{Interazione fattore C e D vs altri}.]
-   {\includegraphics[width=.65\textwidth]{Report-017mod}}
-\caption{Grafici delle interazioni tra fattori.}
-\label{fig:subfig}
+\clearpage 
+\begin{figure}[ht]\ContinuedFloat
+  \centering
+  \subfloat[][\emph{Interazione fattore C e D vs altri}.]{\includegraphics[width=.65\textwidth]{Report-017mod}}
+  \caption{Grafici delle interazioni tra fattori.}
+  \label{fig:subfig}
 \end{figure}
-\newpage Dai grafici si osserva:
+Dai grafici si osserva:
 \begin{itemize}
 \item L'effetto di A, quantità di acqua (WaterLevel), è elevato, ma presenta scarse interazioni con gli altri fattori.
 \item L'effetto di B, tipo di acqua (WaterType), è elevato nella maggior parte delle interazioni presentando invece un forte interazione con il fattore D ed E, pressatura (Pressing) e fiamma (Heat) ripsettivamente.

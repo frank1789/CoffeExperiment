@@ -115,7 +115,7 @@
 	\input{introduzione.tex}
 	\SweaveInput{esperimentopeso.Rnw}
 	\SweaveInput{esperimentotempo.Rnw}
-	%\input{conclusione}
+	\input{conclusione}
 
 	% === Bibliografia ====================================
 	\newpage
