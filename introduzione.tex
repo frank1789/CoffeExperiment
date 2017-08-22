@@ -62,8 +62,12 @@ In tabella \ref{tab:factorLvl} si riportano in forma sintetica i valori e i live
 \end{table}
 \newpage
 \section{L'esperimento}
-Seguendo l'esempio delle lezioni si è realizzata una funzione per generare la design matrix  e la salva su un file per poi completarla e successivamente una volta esegute le prove.
-All'interno della funzione si è fatto uso della funzione \emph{gl()} per generare sequenze ordinate di fattori e la gnerazione di una chiave di ordinazione casuale.
+\subsection{Generazione Design Matrix}
+Seguendo l'esempio delle lezioni si è realizzata una funzione per generare la design matrix e salvarla su un file per poi completarla successivamente una volta eseguite le prove.
 Le prove sono state eseguite seguendo il \emph{RunOrder} riportato nella design matrix in quanto sono state eseguite più prove nello stesso giorno.
-La base della caffettiera è stata riempita con acqua fredda secondo i livelli prima descritti, pesando di volta in volta la quantità di acqua nella caldaia. Succesivamente si prosegue con la deposizione del caffe nel filtro in quantità prescritte dalla prova ed effettuta una pressatura o meno. Viene avvitata la parte superiore della caffetiera e posizionata sul fornello piu piccolo del piano cottura regolandone la fiamma conteporanemante si avvia il cronometro.
-L'alimentazione viene spenta quando il caffè è risalito completamente, si ferma il cronometro, viene pesata la quantità di caffè fuoriscita sulla bialanica ed infine si registra iniseme al tempo.
+\subsection{Esecuzione delle prove}
+Per ogni prova si è utilizzata la caffettiera da tre tazze della “Bialetti”, posta sulla bilancia, si effetua la tara azzerando la bilancia. Si sceglie la bottiglia d'acqua, secondo il numero della prova, considerando che l'acqua è a temperatura ambiente e si pesa il quantitativo. Si aggiunge il filto e si effettua nuovamente la tara.
+Si preleva la miscela di caffè dal barattolo, aggiungendo cucchiani  pesando contemporeamente fino a raggiungere il peso desiderato.
+La parte superiore della caffettiera viene avvitata sul corpo caldaia e posizionata sul bruciatore regolando la fiamma nella posizione prescritta e contemporenamente si avvia il cronometro.
+Alla fuoriuscita del caffe si arresta la fiamma e il cronometro, quindi si pesa la bevanda fuorisciuta sulla bilancia.
+Si registrano i risultati nella design matrix.
