@@ -7,7 +7,11 @@ getwd()
 setwd('/Users/francescoargentieri/ProjectR')
 
 # load library
-library(lubridate)
+if (!require(lubridate)) {
+  install.packages("lubridate")
+  library(lubridate)
+}
+
 library(MASS)
 
 # read dataframe from file with result
@@ -107,4 +111,51 @@ bc = boxcox(df.lm3, data = df)
 title("Box-Cox Transformation")
 lambda = bc$x[which.max(bc$y)]
 lambda
+
+lvl <- c(-1, +1)
+df2 <- expand.grid(A=lvl, B=lvl, C=lvl, D=lvl)
+df2
+attach(df2)
+df2$E <- A*B*C*D
+detach(df2)
+df2
+df2$A <- factor(df2$A,levels = lvl ,labels = c('-', '+'))
+df2$B <- factor(df2$B,levels = lvl,labels = c('-', '+'))
+df2$C <- factor(df2$C,levels = lvl,labels = c('-', '+'))
+df2$D <- factor(df2$D,levels = lvl,labels = c('-', '+'))
+df2$E <- factor(df2$E,levels = lvl,labels = c('-', '+'))
+df2
+dfrow <- df[3:7]
+dfrow
+
+
+library("dplyr")
+
+
+a <- df
+b <- df2
+
+
+df.ffp <-dplyr::semi_join(a, b, by = c("A","B","C","D","E"))
+df.ffp
+
+
+sum(df.ffp$Yield) # => 485
+
+df.ffp.lm <- lm(Yield~A*B*C*D*E, data=df)
+anova(df.ffp.lm)
+n <- length(df.ffp.lm$effects)
+effects <- as.vector(df.ffp.lm$effects[2:n])
+qn <- qqnorm(effects, datax=T, ylim=c(-70, 30))
+text(qn$x, qn$y, lab=names(df.ffp.lm$effects)[2:n], pos=4)
+qqline(effects, datax=T)
+
+df.ffp.lm2 <- lm(Yield~ A * C * E, data=df)
+anova(df.ffp.lm2)
+qqnorm(df.ffp.lm2$residuals)
+qqline(df.ffp.lm2$residuals)
+hist(df.ffp.lm2$residuals)
+plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals , ylab = "Residuals" , xlab = "Fitted",
+     main = "Fitted values pattern")
+
 
