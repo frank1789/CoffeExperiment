@@ -180,7 +180,7 @@ qn <- qqnorm(effects, datax=T)
 text(qn$x, qn$y, lab=names(df.ffp.lm$effects)[2:n], pos=4)
 qqline(effects, datax=T)
 
-df.ffp.lm <- lm(Yield~A*C+D, data=df.ffp)
+df.ffp.lm <- lm(log(Yield)~A*C+D, data=df.ffp)
 anova(df.ffp.lm)
 qqnorm(df.ffp.lm$residuals)
 qqline(df.ffp.lm$residuals)

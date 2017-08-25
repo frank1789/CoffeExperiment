@@ -215,7 +215,7 @@ Si procede all'analisi dell'adeguatezza del modello.
 <<fig=T, echo=F>>=
 qqnorm(df.ffp.lm2$residuals)
 qqline(df.ffp.lm2$residuals, col = "red")
-hist(df.ffp.lm2$residuals)
+hist(df.ffp.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
 plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals, ylab = "Residuals", xlab = "Fitted",
      main = "Fitted values pattern")
 @

@@ -179,7 +179,7 @@ qqline(effects, datax = T, col = "dodgerblue")
 \end{figure}
 Anche in questo caso non si hanno repliche e non è possibile eseguire l'analisi \textsc{anova}, quindi si cercano gli effetti più significativi in figura \ref{fig:ffpeffecttime}.
 <<>>=
-df.ffp.lm2 <- lm(log(Yield) ~ A + C * E, data = df.ffp)
+df.ffp.lm2 <- lm(Yield ~ A + C * E, data = df.ffp)
 anova(df.ffp.lm2)
 @
 <<echo=F,results=hide>>=
@@ -191,7 +191,7 @@ Si procede all'analisi dell'adeguatezza del modello.
 <<fig=T, echo=F>>=
 qqnorm(df.ffp.lm2$residuals)
 qqline(df.ffp.lm2$residuals, col = "red")
-hist(df.ffp.lm2$residuals)
+hist(df.ffp.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
 plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals , ylab = "Residuals" , xlab = "Fitted",
      main = "Fitted values pattern")
 @
@@ -201,5 +201,5 @@ plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals , ylab = "Residuals" , xlab 
 <<>>=
 shapiro.test(df.ffp.lm2$residuals)
 @
-Da cui possiamo osservare che i risultati sia dei grafici, figura \ref{fig:ffpTime}, sia del test di Shapiro mostrano la normalità dei residui, con un \emph{p-value}: del $73,53\%$ di commettere un errore di tipo I e la tabella \textsc{anova} mostra che effettivamente i fattori trovati sono significativi. Simile a quanto già osservato nell'analisi del piano fattoriale completo.
+Da cui possiamo osservare che i risultati sia dei grafici, figura \ref{fig:ffpTime}, sia del test di Shapiro mostrano la normalità dei residui, con un \emph{p-value}: del $41\%$ di commettere un errore di tipo I e la tabella \textsc{anova} mostra che effettivamente i fattori trovati sono significativi. Simile a quanto già osservato nell'analisi del piano fattoriale completo.
 %
