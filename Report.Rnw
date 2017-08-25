@@ -101,7 +101,7 @@
 %========================================
 % TESTO DELLA TESI
 %========================================
-
+\emergencystretch=1em
 \begin{document}
 \SweaveOpts{concordance=TRUE, echo=true}
 	% === Frontespizio ====================================
@@ -118,8 +118,8 @@
 	\input{conclusione}
 
 	% === Bibliografia ====================================
-	\newpage
-	\bibliographystyle{IEEEtran}
-	\bibliography{bibliografia-tesi.bib}
+	%\newpage
+	%\bibliographystyle{IEEEtran}
+	%\bibliography{bibliografia-tesi.bib}
 
 \end{document}

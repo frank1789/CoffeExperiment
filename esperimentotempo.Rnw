@@ -47,7 +47,7 @@ Quindi si verifica il risultato ottenuto:
 <<>>=
 df
 @
-Definendo un modello lineare espresso dalla seguente relazione $(Yield \sim A*B*C*D*E)$ si ottiene come osservato per l'esperimento precedente che i residui sono nulli, per l'ipotesi già osservate di piano fattoriale completo e assenza di replicazioni è necessario individuare l'effeto dei fattori, quindi, applicando il metodo di Daniel  si osserva il grafico quantile--quantile per il modello lineare completo:
+Definendo un modello lineare espresso dalla seguente relazione $(Yield \sim A*B*C*D*E)$ si ottiene come osservato per l'esperimento precedente che i residui sono nulli, per l'ipotesi già osservate di piano fattoriale completo e assenza di replicazioni è necessario individuare l'effetto dei fattori, quindi, applicando il metodo di Daniel  si osserva il grafico quantile--quantile per il modello lineare completo:
 <<echo=F,results=hide>>=
 options(SweaveHooks = list(fig = function() par(mfrow=c(1,1)))) 
 df.lm<- lm(Yield ~ A * B * C * D * E, data = df)
@@ -94,7 +94,7 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 \label{fig:lm2Time}
 \end{figure}
 %
-\newline \noindent Si osserva, in figura \ref{fig:lm2Time}, una distribuzione normale nell'istrogramma e l'assenza di pattern nel "Fitted value Pattern". Dato un basso valore \emph{p-value} nelle interazioni A:B, A:D, B:D, C:E, si modifica di conseguenza il modello, impostando una relazione in cui non viene considerata la possibilità di interazione tra i fattori, assumendo $(Yield \sim A + C + E)$ si ottiene:
+\newline \noindent Si osserva, in figura \ref{fig:lm2Time}, una distribuzione normale nell'istrogramma e l'assenza di pattern nel “Fitted value Pattern". Dato un basso valore \emph{p-value} nelle interazioni A:B, A:D, B:D, C:E, si modifica di conseguenza il modello, impostando una relazione in cui non viene considerata la possibilità di interazione tra i fattori, assumendo $(Yield \sim A + C + E)$ si ottiene:
 <<>>=
 df.lm3 <- lm(Yield ~ A + C + E, data = df)
 anova(df.lm3)
@@ -155,7 +155,7 @@ Dai grafici, nelle figure \ref{fig:subfig2}, derivano le seguenti osservazioni:
 \end{itemize}
 %
 \section{Piano fattoriale frazionato}
-Come fatto in precedenza, nella sezione (\ref{sec:ffp1}), si genera un piano frazionato $2^{5-1}_V$ con le medesime premesse e ottenendo i vantaggi prima evidenziati, si importa design matrix:
+Come fatto in precedenza, nella sezione (\ref{sec:ffp1}), si genera un piano frazionato $2^{5-1}_V$ con le medesime premesse e ottenendo i vantaggi prima evidenziati, si importa la design matrix:
 <<result=hide>>=
 (df.ffp <- read.table("ffpTime.dat", header = T))
 @
@@ -175,8 +175,9 @@ text(qn$x, qn$y, lab = names(df.ffp.lm$effects)[2:n], pos = 4)
 qqline(effects, datax = T, col = "dodgerblue")
 @
 \caption{Distribuzione normale degli effetti}
+\label{fig:ffpeffecttime}
 \end{figure}
-Anche in questo caso non si hanno repliche e non è possibile eseguire l'analisi \textsc{anova}, quindi si cercano gli effetti più significativi.
+Anche in questo caso non si hanno repliche e non è possibile eseguire l'analisi \textsc{anova}, quindi si cercano gli effetti più significativi in figura \ref{fig:ffpeffecttime}.
 <<>>=
 df.ffp.lm2 <- lm(log(Yield) ~ A + C * E, data = df.ffp)
 anova(df.ffp.lm2)
@@ -200,5 +201,5 @@ plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals , ylab = "Residuals" , xlab 
 <<>>=
 shapiro.test(df.ffp.lm2$residuals)
 @
-Da cui possiamo osservare che i risultati sia dei grafici, figura \ref{fig:ffpTime}, sia del test di Shapiro mostrano la normalità dei residui, con un \emph{p-value}: del $73,53\%$ di commettere un errore di tipo I e la tabella \textsc{anova} mostra che effettivamente i fattori trovati sono significativi. simile a quanto già osservato nell'analisi del piano fattoriale completo.
+Da cui possiamo osservare che i risultati sia dei grafici, figura \ref{fig:ffpTime}, sia del test di Shapiro mostrano la normalità dei residui, con un \emph{p-value}: del $73,53\%$ di commettere un errore di tipo I e la tabella \textsc{anova} mostra che effettivamente i fattori trovati sono significativi. Simile a quanto già osservato nell'analisi del piano fattoriale completo.
 %
