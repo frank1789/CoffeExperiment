@@ -1,4 +1,5 @@
 \chapter{Esperimento 1}
+\section{Piano fattoriale completo}
 Attraverso l'uso di R si è realizzata la matrice degli esperimenti, \emph{Design Matrix}, nella quale si realizzano le combinazioni dei fattori prima descritti e i relativi livelli, dopo aver realizzato la matrice degli esperimenti come visto in precedenza, sono state realizzate le prove.
 In quanto si sono realizzate più prove in successione si è preferito eseguire l'esperimeto secondo il \emph{RunOrder} generato casualmente, poi sono stati registrati i risultati nel dataframe.
 <<echo=F,results=hide>>=
@@ -156,7 +157,7 @@ interaction.plot(df$C,df$E,df$Yield, xlab = "CoffeLoad", ylab = "Yield", trace.l
 interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Yield", trace.label = "Heat")
 @
 \newpage
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \subfloat[][\emph{Interazione fattore A vs altri}.]{\includegraphics[width=.65\textwidth]{Report-015}} \,
   \subfloat[][\emph{Interazione fattore B e C vs altri}.]{\includegraphics[width=.65\textwidth]{Report-016}}\\
@@ -168,9 +169,53 @@ interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Yield", trace.la
   \caption{Grafici delle interazioni tra fattori.}
   \label{fig:subfig}
 \end{figure}
-Dai grafici si osserva:
+Dai grafici, di figura \ref{fig:subfig}, si osserva:
 \begin{itemize}
 \item L'effetto di A, quantità di acqua (WaterLevel), è elevato, ma presenta scarse interazioni con gli altri fattori.
 \item L'effetto di B, tipo di acqua (WaterType), è elevato nella maggior parte delle interazioni presentando invece un forte interazione con il fattore D ed E, pressatura (Pressing) e fiamma (Heat) ripsettivamente.
 \item L'effeto dei fattori C e D presentano un'elevata interazione; al contrario dimostrano scarsa interazione ed efetto elevato se confrontati con i fattori E e D.
 \end{itemize}
+%
+\section{Piano fattoriale frazionato}
+\label{sec:ffp1}
+Si può utilizzare un piano frazionato $2^{5-1}_V$ con una relazione delt tipo \textbf{I = ABCDE} ponendo poi il fattore \textbf{E} in funzione degli altri secondo la realzione \textbf{E = ABCD}. Questo permette di ottenere un numero di effettuare metà delle prove rispetto le misurazioni necessarie per un piano fattoriale completo.
+Si importa la tabella, ottenendo:
+<<result=hide>>=
+(df.ffp <- read.table("ffpWeight.dat", header = T))
+@
+<<>>=
+df.ffp.lm <- lm(Yield ~ A * B * C * D * E, data = df.ffp)
+@
+<<echo=F,results=hide>>=
+options(SweaveHooks = list(fig = function() par(mfrow=c(1,1)))) 
+@
+\begin{figure}[!ht]
+\centering
+<<fig=T,echo=F>>=
+n <- length(df.ffp.lm$effects)
+effects <- as.vector(df.ffp.lm$effects[2:n])
+qn <- qqnorm(effects, datax = T)
+text(qn$x, qn$y, lab = names(df.ffp.lm$effects)[2:n], pos = 4)
+qqline(effects, datax = T, col = "dodgerblue")
+@
+\end{figure}
+Anche in questo caso non si hanno repliche e non è possibile eseguire l'analisi \textsc{anova}, quindi si cercano gli effetti più significativi.
+<<>>=
+df.ffp.lm2 <- lm(Yield ~ A * C + D, data = df.ffp)
+anova(df.ffp.lm2)
+@
+<<echo=F,results=hide>>=
+options(SweaveHooks = list(fig = function() par(mfrow=c(2,2)))) 
+@
+Si procede all'analisi dell'adeguatezza del modello.
+\begin{figure}[!ht]
+\centering
+<<fig=T, echo=F>>=
+qqnorm(df.ffp.lm2$residuals)
+qqline(df.ffp.lm2$residuals, col = "red")
+hist(df.ffp.lm2$residuals)
+plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals, ylab = "Residuals", xlab = "Fitted",
+     main = "Fitted values pattern")
+@
+\end{figure}
+\newline Da cui possiamo osservare in risultato simile a quanto già osservato nell'analisi del piano fattoriale completo, ovvero l'influenza maggiore è data da \textbf{C}.

@@ -1,4 +1,5 @@
 \chapter{Esperimento 2}
+\section{Piano fattoriale completo}
 In questa parte dell'eperimento si registra nella design matrix i valori del tempo assunti come resa del processo, si è inoltre assunto di misurare l'intero processo in modo da ridurre il peso dell'errore nella misura del tempo invece che registrare il solo tempo di estrazione.
 Una volta terminate le prove si riportano i risultati nel dataframe. 
 <<echo=F,results=hide>>=
@@ -63,7 +64,7 @@ qqline(effects,  datax = T, col = "dodgerblue")
 @
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.70\textwidth]{Report-024}
+  \includegraphics[width=0.70\textwidth]{Report-031}
   \caption{Analisi degli effetti secondo il metodo di Daniel}
   \label{fig:QuantileEffectTime}
 \end{figure}
@@ -88,7 +89,7 @@ plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
 @
 \begin{figure}[h]
 \centering
-  \includegraphics[width=0.80\textwidth]{Report-027}
+  \includegraphics[width=0.80\textwidth]{Report-034}
 \caption{modello lineare $(Yield \sim A * B * D + C * E)$, analisi dei residui}
 \label{fig:lm2Time}
 \end{figure}
@@ -110,7 +111,7 @@ plot(df$RunOrder, df.lm3$residuals, xlab="Actual Run Order", ylab="Residual",
 @
 \begin{figure}[h] 
   \centering
-  \includegraphics[width=0.70\textwidth]{Report-029}
+  \includegraphics[width=0.70\textwidth]{Report-036}
   \caption{modello lineare $(Yield \sim A + C + E)$, analisi dei residui}
   \label{fig:MACTime3}
 \end{figure}
@@ -135,12 +136,12 @@ interaction.plot(df$D,df$E,df$Yield, xlab = "Pressing", ylab = "Yield", trace.la
 @
 \begin{figure}[h]
   \centering
-  \subfloat[][\emph{Interazione fattore A vs altri}.]{\includegraphics[width=.80\textwidth]{Report-030}} \,
+  \subfloat[][\emph{Interazione fattore A vs altri}.]{\includegraphics[width=.80\textwidth]{Report-037}} \,
 \end{figure}
 \clearpage
 \begin{figure}[ht]\ContinuedFloat
   \centering
-  \subfloat[][\emph{Interazione fattore B e C vs altri}.]{\includegraphics[width=.7\textwidth]{Report-031}} \,
+  \subfloat[][\emph{Interazione fattore B e C vs altri}.]{\includegraphics[width=.7\textwidth]{Report-038}} \,
   \subfloat[][\emph{Interazione fattore C e D vs altri}.]{\includegraphics[width=.7\textwidth]{Report-032mod}}
   \caption{Grafici delle interazioni tra fattori.}
   \label{fig:subfig2}
@@ -152,3 +153,52 @@ Dai grafici, nelle figure \ref{fig:subfig2}, derivano le seguenti osservazioni:
 \item L'effetto di B, è elevato nella maggior parte delle interazioni presentando invece un forte interazione unicamente con il fattore D al contrario di quanto è avveniva nell'esperimento precedente.
 \item Il fattori C presenta una forte interazione con il fattore D, mentre negli altri casi presenta solo un effetto elevato, cosi come accadave in precedenza.
 \end{itemize}
+%
+\section{Piano fattoriale frazionato}
+Come fatto in precedenza, nella sezione (\ref{sec:ffp1}), si genera un piano frazionato $2^{5-1}_V$ con le medesime premesse e ottenendo i vantaggi prima evidenziati, si importa design matrix:
+<<result=hide>>=
+(df.ffp <- read.table("ffpTime.dat", header = T))
+@
+<<>>=
+df.ffp.lm <- lm(Yield ~ A * B * C * D * E, data = df.ffp)
+@
+<<echo=F,results=hide>>=
+options(SweaveHooks = list(fig = function() par(mfrow=c(1,1)))) 
+@
+\begin{figure}[!ht]
+\centering
+<<fig=T,echo=F>>=
+n <- length(df.ffp.lm$effects)
+effects <- as.vector(df.ffp.lm$effects[2:n])
+qn <- qqnorm(effects, datax = T)
+text(qn$x, qn$y, lab = names(df.ffp.lm$effects)[2:n], pos = 4)
+qqline(effects, datax = T, col = "dodgerblue")
+@
+\caption{Distribuzione normale degli effetti}
+\end{figure}
+Anche in questo caso non si hanno repliche e non è possibile eseguire l'analisi \textsc{anova}, quindi si cercano gli effetti più significativi.
+<<>>=
+df.ffp.lm2 <- lm(log(Yield) ~ A + C * E, data = df.ffp)
+anova(df.ffp.lm2)
+@
+<<echo=F,results=hide>>=
+options(SweaveHooks = list(fig = function() par(mfrow=c(2,2)))) 
+@
+Si procede all'analisi dell'adeguatezza del modello.
+\begin{figure}[!ht]
+\centering
+<<fig=T, echo=F>>=
+qqnorm(df.ffp.lm2$residuals)
+qqline(df.ffp.lm2$residuals, col = "red")
+hist(df.ffp.lm2$residuals)
+plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals , ylab = "Residuals" , xlab = "Fitted",
+     main = "Fitted values pattern")
+@
+\caption{Verifica dell'adeguatezza}
+\label{fig:ffpTime}
+\end{figure}
+<<>>=
+shapiro.test(df.ffp.lm2$residuals)
+@
+Da cui possiamo osservare che i risultati sia dei grafici, figura \ref{fig:ffpTime}, sia del test di Shapiro mostrano la normalità dei residui, con un \emph{p-value}: del $73,53\%$ di commettere un errore di tipo I e la tabella \textsc{anova} mostra che effettivamente i fattori trovati sono significativi. simile a quanto già osservato nell'analisi del piano fattoriale completo.
+%
