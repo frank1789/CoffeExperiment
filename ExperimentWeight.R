@@ -164,20 +164,23 @@ b <- df2
 
 
 df.ffp<-dplyr::semi_join(a, b, by = c("A","B","C","D","E"))
-df.ffp
 
-
+write.table(df.ffp[3:8],"ffpWeight.dat", col.names = T,
+            row.names = F,
+            quote = F,
+            sep = "\t")
+df.ffp <- df.ffp[3:8]
 sum(df.ffp$Yield) # => 485
 
-df.ffp.lm <- lm(Yield~A*B*C*D*E, data=df)
+df.ffp.lm <- lm(Yield~A*B*C*D*E, data=df.ffp)
 
 n <- length(df.ffp.lm$effects)
 effects <- as.vector(df.ffp.lm$effects[2:n])
-qn <- qqnorm(effects, datax=T, ylim=c(-70, 30))
+qn <- qqnorm(effects, datax=T)
 text(qn$x, qn$y, lab=names(df.ffp.lm$effects)[2:n], pos=4)
 qqline(effects, datax=T)
 
-df.ffp.lm <- lm(Yield~A + B *C* E, data=df)
+df.ffp.lm <- lm(Yield~A*C+D, data=df.ffp)
 anova(df.ffp.lm)
 qqnorm(df.ffp.lm$residuals)
 qqline(df.ffp.lm$residuals)

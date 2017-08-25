@@ -70,6 +70,8 @@ hist(df.lm2$residuals, xlab = "Residuals", main = "Histogram of residuals")
 plot(df$RunOrder, df.lm2$residuals, xlab="Actual Run Order", ylab="Residual",
      main="Run Order Plot")
 boxplot(df.lm2$residuals, horizontal = T)
+shapiro.test(df.lm2$residuals)
+
 
 # linear model 3 - without interaction
 df.lm3 <- lm(Yield ~ A + C + E, data = df)
@@ -137,25 +139,22 @@ b <- df2
 
 
 df.ffp <-dplyr::semi_join(a, b, by = c("A","B","C","D","E"))
-df.ffp
-
-
-sum(df.ffp$Yield) # => 485
-
-df.ffp.lm <- lm(Yield~A*B*C*D*E, data=df)
+write.table(df.ffp[3:8],"ffpTime.dat", col.names = T, row.names = F, quote = F, sep = "\t")
+(df.ffp <- read.table("ffpTime.dat", header = T))
+df.ffp.lm <- lm(Yield~A*B*C*D*E, data=df.ffp)
 anova(df.ffp.lm)
-n <- length(df.ffp.lm$effects)
-effects <- as.vector(df.ffp.lm$effects[2:n])
-qn <- qqnorm(effects, datax=T, ylim=c(-70, 30))
-text(qn$x, qn$y, lab=names(df.ffp.lm$effects)[2:n], pos=4)
-qqline(effects, datax=T)
+(n <- length(df.ffp.lm$effects))
+(effects <- as.vector(df.ffp.lm$effects[2:n]))
+qn <- qqnorm(effects,datax = T)
+text(qn$x, qn$y, lab=names(df.ffp.lm$effects)[2:n], pos=1)
+qqline(effects, datax = T, col= "dodgerblue "
+)
 
-df.ffp.lm2 <- lm(Yield~ A * C * E, data=df)
+df.ffp.lm2 <- lm((Yield)~A+C*E, data=df.ffp)
 anova(df.ffp.lm2)
 qqnorm(df.ffp.lm2$residuals)
 qqline(df.ffp.lm2$residuals)
 hist(df.ffp.lm2$residuals)
 plot(df.ffp.lm2$fitted.values, df.ffp.lm2$residuals , ylab = "Residuals" , xlab = "Fitted",
      main = "Fitted values pattern")
-
-
+shapiro.test(df.ffp.lm2$residuals)
